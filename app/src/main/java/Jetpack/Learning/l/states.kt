@@ -78,6 +78,7 @@ Column {
                 .fillMaxWidth()){
       expCheckox()
     }
+    Counter()
 }
 
                 }
