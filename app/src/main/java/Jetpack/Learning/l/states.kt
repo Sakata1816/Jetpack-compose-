@@ -79,6 +79,8 @@ Column {
       expCheckox()
     }
     Counter()
+    TextFieldCheck()
+
 }
 
                 }

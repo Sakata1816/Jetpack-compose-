@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Person
@@ -25,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,24 +56,34 @@ fun Increment(value:Int,onClickChange:(Int)->Unit){
 
 }
 val localParams= compositionLocalOf{}
-var username by remember { mutableStateOf("") }
+
 
 
 
 @Composable
-fun TextFieladCheck(){
-   TextField(value=username,
-       onValueChange = {username=it},
-       modifier = Modifier.size(width = 150.dp, height = 50.dp),
-       placeholder = {Text("Поле для ввода") },//Это текст-подсказка, который отображается, пока пользователь ничего не ввёл.
-       leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) }, //Иконка слева от текста.
-       trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) }, //Иконка справа от текста.
-       prefix = { Text("Text:") }, //Компонент перед вводимым текстом, внутри поля.
-       suffix = { Text("| here is the end of text") }, //Компонент после вводимого текста, внутри поля.
-       supportingText = { Text("Пароль должен быть минимум 8 символов") } , //Текст под полем, который может давать подсказку или сообщение об ошибке.
-       visualTransformation = PasswordVisualTransformation(),
-
-
+fun TextFieldCheck(){
+    val phone = remember{mutableStateOf("")}
+    var username = remember { mutableStateOf("") }
+    Column() {
+        TextField(value=username.value,
+            onValueChange = {username.value=it},
+            modifier = Modifier.size(width = 750.dp, height = 50.dp),
+            placeholder = {Text("Поле для ввода") },//Это текст-подсказка, который отображается, пока пользователь ничего не ввёл.
+            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) }, //Иконка слева от текста.
+            trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) }, //Иконка справа от текста.
+            prefix = { Text("Text:") }, //Компонент перед вводимым текстом, внутри поля.
+          //  suffix = { Text("| here is the end of text") }, //Компонент после вводимого текста, внутри поля.
+           // supportingText = { Text("Пароль должен быть минимум 8 символов") } , //Текст под полем, который может давать подсказку или сообщение об ошибке.
+            // visualTransformation = PasswordVisualTransformation(),
    )
+        TextField(
+            phone.value,
+            {phone.value = it},
+            textStyle = TextStyle(fontSize = 28.sp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+        )
+    }
+
+
 
 }
