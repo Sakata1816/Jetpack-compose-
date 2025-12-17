@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -67,14 +69,18 @@ fun TextFieldCheck(){
     Column() {
         TextField(value=username.value,
             onValueChange = {username.value=it},
-            modifier = Modifier.size(width = 750.dp, height = 50.dp),
+            modifier = Modifier.width(550.dp),
             placeholder = {Text("Поле для ввода") },//Это текст-подсказка, который отображается, пока пользователь ничего не ввёл.
             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) }, //Иконка слева от текста.
-            trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) }, //Иконка справа от текста.
+            trailingIcon = {
+                IconButton({username.value=""}){
+                    Icon(Icons.Default.Clear, contentDescription = null) } //Иконка справа от текста.
+                },
+
             prefix = { Text("Text:") }, //Компонент перед вводимым текстом, внутри поля.
-          //  suffix = { Text("| here is the end of text") }, //Компонент после вводимого текста, внутри поля.
-           // supportingText = { Text("Пароль должен быть минимум 8 символов") } , //Текст под полем, который может давать подсказку или сообщение об ошибке.
-            // visualTransformation = PasswordVisualTransformation(),
+            suffix = { Text("| here is the end of text") }, //Компонент после вводимого текста, внутри поля.
+            supportingText = { Text("Пароль должен быть минимум 8 символов") } , //Текст под полем, который может давать подсказку или сообщение об ошибке.
+            visualTransformation = PasswordVisualTransformation(),
    )
         TextField(
             phone.value,
