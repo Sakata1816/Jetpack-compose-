@@ -80,6 +80,7 @@ Column {
     }
     Counter()
     TextFieldCheck()
+    buttonCheck()
 
 }
 
