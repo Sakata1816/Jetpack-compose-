@@ -54,7 +54,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.MutableState
 
-class MainActivity : ComponentActivity() {
+class MainActivity1 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
