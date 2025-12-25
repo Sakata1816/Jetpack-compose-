@@ -35,3 +35,4 @@ fun CounterView(viewModel: MyViewModel=viewModel()){
         }
     }
 }
+

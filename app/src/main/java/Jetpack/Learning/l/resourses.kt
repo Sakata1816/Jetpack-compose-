@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.jetpackompose.R
 
 
-class MainActivity: ComponentActivity() {
+class MainActivity2: ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
