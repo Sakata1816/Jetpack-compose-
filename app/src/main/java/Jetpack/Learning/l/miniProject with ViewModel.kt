@@ -6,11 +6,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,6 +25,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -40,13 +44,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 
-class MainActivity: ComponentActivity() {
+class MainActivity4: ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background // Используем цвет фона из темы (обычно белый или темно-серый)
+            ){
                 Main()
+            }
+
 
 
         }
@@ -86,7 +96,8 @@ fun Main(vm:UserListViewModel= viewModel()){
 
 @Composable
 fun userData(addUser:()->Unit,userName: String,userAge: Int,changeName: (String)->Unit,changeAge: (String)->Unit){
-    Column(modifier = Modifier.padding(WindowInsets.systemBars.asPaddingValues()),
+    Column(modifier = Modifier.fillMaxWidth()
+        .padding(WindowInsets.systemBars.asPaddingValues()),
         horizontalAlignment = Alignment.CenterHorizontally
         ){
         TextField(
@@ -99,7 +110,8 @@ fun userData(addUser:()->Unit,userName: String,userAge: Int,changeName: (String)
             value = userAge.toString(),
             onValueChange = { changeAge(it) },
             modifier = Modifier.padding(8.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = {Text("Age")}
         )
         Button(onClick = {addUser()},
             modifier = Modifier.padding(8.dp)

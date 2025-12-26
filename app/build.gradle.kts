@@ -41,14 +41,17 @@ android {
 
 dependencies {
 
+
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    //для навигации
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Замените выделенную строку на эту:
     implementation("androidx.compose.runtime:runtime-livedata:1.7.6") // Версию можно менять, но эта стабильная
 
+    //для viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.core.ktx)

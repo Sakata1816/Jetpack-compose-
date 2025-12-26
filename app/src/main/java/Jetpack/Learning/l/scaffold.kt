@@ -118,10 +118,7 @@ class MainActivity3: ComponentActivity() {
                   modifier=  Modifier.padding(it))
 
             }
-
-
-
-        }
+ }
     }
 }
 val PV= PaddingValues()
