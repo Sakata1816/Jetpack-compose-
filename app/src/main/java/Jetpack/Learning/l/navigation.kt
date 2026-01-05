@@ -56,7 +56,7 @@ class MainActivity: ComponentActivity() {
             composable(NavRoute.Contacts.route){
                 Contacts()
             }
-            composable(NavRoute.About.route){
+            composable("about"){
                 About()
             }
             composable(NavRoute.Main.route){
@@ -90,7 +90,7 @@ fun navigation(navController: NavHostController) {
           color= Color.Green)
       Text("About",
           Modifier.weight(0.25f)
-              .clickable{navController.navigate(NavRoute.About.route)},
+              .clickable{navController.navigate("about")},
           fontSize = 24.sp,
           color= Color.Blue)
       Text("Main",
