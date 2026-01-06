@@ -31,7 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 
-class MainActivity: ComponentActivity() {
+class MainActivity5: ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class MainActivity: ComponentActivity() {
     @Composable
     fun main(modifier: Modifier = Modifier) {
         val navController = rememberNavController()
-    Column(Modifier.padding(8.dp)){
+    Column(modifier=modifier){
         navigation(navController = navController)
         NavHost(navController = navController, startDestination = NavRoute.Home.route){
             composable(NavRoute.Home.route){
@@ -76,7 +76,7 @@ class MainActivity: ComponentActivity() {
 @Composable
 fun navigation(navController: NavHostController) {
   Row(modifier = Modifier.fillMaxWidth()
-      .padding(WindowInsets.systemBars.asPaddingValues())
+     // .padding(WindowInsets.systemBars.asPaddingValues())
       .padding(horizontal = 20.dp)){
       Text("Home",
           Modifier.weight(0.25f)
