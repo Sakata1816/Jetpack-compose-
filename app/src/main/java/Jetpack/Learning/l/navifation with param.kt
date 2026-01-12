@@ -82,12 +82,12 @@ fun CarList(cars:List<Cars>,removeCar: (Cars)-> Unit) {
 }
 
 fun colorRewrite(color:String):Color{
-    return when(color){
-        "Red"->Color.Red
-        "White"->Color.White
-        "Yellow"->Color.Yellow
-        "Blue"->Color.Blue
-        "Green"->Color.Green
+    return when(color.trim().lowercase()){
+        "red"->Color.Red
+        "white"->Color.White
+        "yellow"->Color.Yellow
+        "blue"->Color.Blue
+        "green"->Color.Green
         else->Color.Black
     }
 }

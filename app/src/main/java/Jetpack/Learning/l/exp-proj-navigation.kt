@@ -42,7 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
-class MainActivity8: ComponentActivity() {
+class MainActivity7: ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,6 +150,7 @@ fun DrawerContent(
         DrawerItem("Contacts", "Contacts", onItemClick)
         DrawerItem("Main", "Main", onItemClick)
         DrawerItem("About", "About", onItemClick)
+        DrawerItem("Cars", "Cars", onItemClick)
     }
 
 }
@@ -206,4 +207,5 @@ sealed class Titles(val route: String){
     object About: Titles("About")
     object Contacts: Titles("Contacts")
     object Home: Titles("Home")
+    object  Cars: Titles("Cars")
 }
