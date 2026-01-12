@@ -36,13 +36,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
-class MainActivity7: ComponentActivity() {
+class MainActivity: ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +124,20 @@ fun Menu(modifier: Modifier= Modifier) {
                     composable(Titles.About.route) {
                         About()
                     }
+                    composable(Titles.Flow.route) {
+                        val vm: ViewObjs = viewModel()
+                        increment(vm.count,  vm::counter )
+                    }
+
+                    composable(Titles.FlowDif.route) {
+                        val vm: Samples=viewModel()
+                        Scaffold {
+                            FlowScreen(vm.stateFlow,vm::incrase,Modifier.padding(it))
+                        }
+                    }
+                    composable(Titles.Cars.route) {
+                        main1()
+                    }
                     composable(Titles.Main.route) {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
@@ -151,6 +166,8 @@ fun DrawerContent(
         DrawerItem("Main", "Main", onItemClick)
         DrawerItem("About", "About", onItemClick)
         DrawerItem("Cars", "Cars", onItemClick)
+        DrawerItem("Flow", "Flow", onItemClick)
+        DrawerItem("Flow2", "FlowDif", onItemClick)
     }
 
 }
@@ -208,4 +225,8 @@ sealed class Titles(val route: String){
     object Contacts: Titles("Contacts")
     object Home: Titles("Home")
     object  Cars: Titles("Cars")
+    object Flow: Titles("Flow")
+    object FlowDif: Titles("FlowDif")
 }
+
+

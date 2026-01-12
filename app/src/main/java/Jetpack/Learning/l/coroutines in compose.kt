@@ -35,7 +35,7 @@ LifecycleScope: создается для каждого компонента с
 
 
 
-class MainActivity: ComponentActivity() {
+class MainActivity8: ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

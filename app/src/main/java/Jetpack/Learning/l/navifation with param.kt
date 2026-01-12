@@ -100,14 +100,15 @@ fun CarData(cars:List<Cars>, addCar:()->Unit, name:String, color: String, change
             onValueChange = {changeName(it)},
             modifier = Modifier.padding(8.dp),
             label = {Text("Name")})
+        TextField(value = color,
+            onValueChange = {changeColor(it)},
+            modifier = Modifier.padding(8.dp),
+            label = {Text("Color")})
+        Button({addCar()}) {
+            Icon(Icons.Filled.Add, contentDescription = "кнопка удаления")
+        }
     }
-    TextField(value = color,
-        onValueChange = {changeColor(it)},
-        modifier = Modifier.padding(8.dp),
-        label = {Text("Color")})
-    Button({addCar()}) {
-        Icon(Icons.Filled.Add, contentDescription = "кнопка удаления")
-    }
+
 
 }
 
