@@ -37,6 +37,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -122,3 +123,74 @@ class MainActivity3: ComponentActivity() {
     }
 }
 val PV= PaddingValues()
+
+@Composable
+fun scaffold(){
+    val isAdded = remember{ mutableStateOf(false) }
+    Scaffold (modifier = Modifier.fillMaxSize(),
+        topBar={
+            @OptIn(ExperimentalMaterial3Api::class)
+            TopAppBar(title={
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                )
+                {
+                    Text("My experience with learnin scaffold",
+                        color = Color.Red,
+                        modifier=Modifier.background(Color.Black)
+                    )
+                    Box(modifier = Modifier.weight(1f)
+                        .height(30.dp)
+                        .background(color = Color.DarkGray))
+                }
+            },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Gray,
+                    titleContentColor = Color.Blue,
+                    navigationIconContentColor = Color.Black,
+                    actionIconContentColor = Color.Black
+                ),
+                navigationIcon = {
+                    IconButton({}) {
+                        Icon(Icons.Filled.Menu, contentDescription = "кнопка меню")
+                    }
+                },
+                actions = {
+                    IconButton({}) {
+                        Icon(Icons.Filled.Info, contentDescription = "кнопка инфы")
+                    }
+                    IconButton({}) {
+                        Icon(Icons.Filled.Search, contentDescription = "кнопка поиска")
+                    }
+                }
+
+            )
+        },
+        bottomBar = {
+            BottomAppBar(containerColor = Color.Gray,
+                contentColor = Color.White) {
+                IconButton({}) {
+                    Icon(Icons.Filled.Favorite, contentDescription = "кнопка поиска")
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton({}) {
+                    Icon(Icons.Filled.Create, contentDescription = "кнопка поиска")
+                }
+
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {isAdded.value=!isAdded.value}) {
+                if(isAdded.value) Icon(Icons.Filled.Clear, contentDescription = "Удалить")
+                else Icon(Icons.Filled.Add, contentDescription = "Добавить")
+            }
+        },
+        floatingActionButtonPosition = androidx.compose.material3.FabPosition.Center
+
+    ){
+        Text(text = if(isAdded.value)"Добавили" else "Не добавили",
+            fontSize = 24.sp,
+            modifier=  Modifier.padding(it))
+
+    }
+}

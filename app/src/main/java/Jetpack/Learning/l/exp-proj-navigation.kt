@@ -101,7 +101,10 @@ fun Menu(modifier: Modifier= Modifier) {
                                 }
                             }
                         )
-                        Screens(navController)
+                        Screens(navController,{
+                            scope.launch {
+                                drawerState.close()
+                            }})
                     }
 
                 }
@@ -114,7 +117,7 @@ fun Menu(modifier: Modifier= Modifier) {
                 }) {
                     Icon(Icons.Filled.Menu, "Меню")
                 }
-                NavHost(navController = navController, startDestination = Titles.Home.route) {
+                NavHost(navController = navController, startDestination = Titles.Scaffold.route) {
                     composable(Titles.Home.route) {
                         Home()
                     }
@@ -127,6 +130,11 @@ fun Menu(modifier: Modifier= Modifier) {
                     composable(Titles.Flow.route) {
                         val vm: ViewObjs = viewModel()
                         increment(vm.count,  vm::counter )
+                    }
+                    composable(Titles.Scaffold.route) {
+                            scaffold()
+
+
                     }
 
                     composable(Titles.FlowDif.route) {
@@ -161,6 +169,7 @@ fun DrawerContent(
     onItemClick: (String) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        DrawerItem("Scaffold", "Scaffold", onItemClick)
         DrawerItem("Home", "Home", onItemClick)
         DrawerItem("Contacts", "Contacts", onItemClick)
         DrawerItem("Main", "Main", onItemClick)
@@ -168,6 +177,7 @@ fun DrawerContent(
         DrawerItem("Cars", "Cars", onItemClick)
         DrawerItem("Flow", "Flow", onItemClick)
         DrawerItem("Flow2", "FlowDif", onItemClick)
+
     }
 
 }
@@ -192,23 +202,29 @@ fun DrawerItem(
 
 
 @Composable
-fun Screens(navController: NavHostController){
+fun Screens(navController: NavHostController,onItemClick:()->Unit){
     Column(modifier = Modifier.fillMaxHeight()
         .padding(horizontal = 20.dp)) {
         Text("Main Screen",
-            modifier = Modifier.clickable(onClick = {navController.navigate(Titles.Main.route)}),
+            modifier = Modifier.clickable(onClick = {
+                onItemClick()
+                navController.navigate(Titles.Main.route)}),
             fontSize = 24.sp,
             color = Color.Red)
         Text("About Screen",
-            modifier = Modifier.clickable(onClick = {navController.navigate(Titles.About.route)}),
+            modifier = Modifier.clickable(onClick = {
+                onItemClick()
+                navController.navigate(Titles.About.route)}),
             fontSize = 24.sp,
             color = Color.Red)
         Text("Contacts Screen",
-            modifier = Modifier.clickable(onClick = {navController.navigate(Titles.Contacts.route) }),
+            modifier = Modifier.clickable(onClick = {onItemClick()
+                navController.navigate(Titles.Contacts.route) }),
             fontSize = 24.sp,
             color = Color.Red)
         Text("Home Screen",
-            modifier = Modifier.clickable(onClick = {navController.navigate(Titles.Home.route)}),
+            modifier = Modifier.clickable(onClick = {onItemClick()
+                navController.navigate(Titles.Home.route)}),
             fontSize = 24.sp,
             color = Color.Red)
     }
@@ -227,6 +243,7 @@ sealed class Titles(val route: String){
     object  Cars: Titles("Cars")
     object Flow: Titles("Flow")
     object FlowDif: Titles("FlowDif")
+    object Scaffold: Titles("Scaffold")
 }
 
 

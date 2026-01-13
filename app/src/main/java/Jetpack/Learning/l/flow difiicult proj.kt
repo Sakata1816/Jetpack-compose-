@@ -5,11 +5,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,7 +68,8 @@ fun FlowScreen(flow: StateFlow<Int>, onIncrease:()->Unit,modifier:Modifier){
         }
         }
 
-    Column(modifier =modifier) {
+    Column(modifier =modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center) {
         Text("$count",
             fontSize = 44.sp,
             )
@@ -74,7 +77,7 @@ fun FlowScreen(flow: StateFlow<Int>, onIncrease:()->Unit,modifier:Modifier){
             Text("Increment")
 
         }
-        LazyColumn {
+        LazyRow() {
             items(messages.size) {
                 Text(messages[it].toString(),
                     fontSize = 28.sp,
@@ -82,6 +85,8 @@ fun FlowScreen(flow: StateFlow<Int>, onIncrease:()->Unit,modifier:Modifier){
                     color = Color.Red)
             }
         }
+
+
     }
 
     }
