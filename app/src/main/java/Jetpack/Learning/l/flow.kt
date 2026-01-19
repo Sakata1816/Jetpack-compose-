@@ -56,7 +56,6 @@ class MainActivity7: ComponentActivity() {
 class ViewObjs: ViewModel(){
     private val _count= MutableStateFlow(0)
     val count=_count.asStateFlow()
-
     fun counter(){
         _count.value++
     }

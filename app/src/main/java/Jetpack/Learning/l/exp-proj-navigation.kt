@@ -1,8 +1,8 @@
 package Jetpack.Learning.l
 
 
-import Jetpack.Learning.l.Main
 import android.annotation.SuppressLint
+import android.icu.number.Precision.increment
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
