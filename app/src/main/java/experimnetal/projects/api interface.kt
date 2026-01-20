@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface MyApi {
 
     @GET("posts") // обязательно без начального /
-    suspend fun getPosts(): List<User>
+    suspend fun getPosts(): List<Post>
 
     @POST("login")
     suspend fun login(
@@ -17,12 +17,12 @@ interface MyApi {
     @GET("users/{id}")
     suspend fun getUser(
         @Path("id") id: Int
-    ): User
+    ): Post
 
     @GET("users")
     suspend fun getUsers(
         @Query("page") page: Int = 1
-    ): List<User>
+    ): List<Post>
 }
 
 

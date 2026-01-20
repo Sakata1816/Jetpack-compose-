@@ -32,6 +32,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -64,8 +66,8 @@ class MainActivity: ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Scaffold {
-                main2(modifier = Modifier.padding(it)
-                    .fillMaxSize())
+              UserTableScreen( viewModel(),
+                  modifier=Modifier.padding(it))
             }
 
     }
@@ -74,39 +76,63 @@ class MainActivity: ComponentActivity() {
 
 
 @Composable
-fun main2(UserVM: UserViewModel = viewModel(),modifier:Modifier){
-    val uiStateM by UserVM.uiState.collectAsState()
+fun UserTableScreen(viewModel: UserViewModel,modifier: Modifier) {
 
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.background)
-    {
-        UsersList( uiStateM.users)
+    val state by viewModel.uiState.collectAsState()
+
+    when {
+        state.isLoading -> {
+            CircularProgressIndicator()
+        }
+
+        state.error != null -> {
+            Text("Ошибка: ${state.error}",
+                modifier=modifier,
+                fontSize = 20.sp)
+        }
+
+        else -> {
+            Column(modifier = modifier) {
+                TableHeader()
+
+                LazyColumn {
+                    items(state.users) { user ->
+                        UserRow(user)
+                        Divider()
+                    }
+                }
+            }
+        }
     }
-
 }
 
 
 @Composable
-fun UsersList(us: List<User>){
-    LazyColumn {
-        items(us){
-            Row (modifier = Modifier
-                .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically)
-            {
-                Text("id = ${it.userId.toString()}",
-                    fontSize = 24.sp)
-                Text("userId = ${it.id.toString()}",
-                    fontSize = 24.sp)
-                Text("title = ${it.title}",
-                    fontSize = 24.sp)
-                Text("body = ${it.body}",
-                    fontSize = 24.sp)
-
-            }
+fun UserRow(user: Post) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Text(user.userId.toString(), Modifier.weight(1f))
+        Text(user.id.toString(), Modifier.weight(2f))
+        Text(user.title, Modifier.weight(3f))
+        Text(user.body, Modifier.weight(4f))
+    }
+}
 
 
-        }
+
+@Composable
+fun TableHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .padding(8.dp)
+    ) {
+        Text("ID", Modifier.weight(1f))
+        Text("Name", Modifier.weight(2f))
+        Text("Email", Modifier.weight(3f))
     }
 }

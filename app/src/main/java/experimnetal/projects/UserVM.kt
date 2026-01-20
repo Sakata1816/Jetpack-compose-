@@ -4,13 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
 class UserRepository(
     private val api: MyApi
 ) {
-    suspend fun getUsers(): List<User> {
+    suspend fun getPosts(): List<Post> {
         return api.getPosts()
     }
 }
@@ -21,7 +22,8 @@ class UserViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UserUiState())
-    val uiState: StateFlow<UserUiState> = _uiState
+    val uiState: StateFlow<UserUiState> = _uiState.asStateFlow()
+
 
     init {
         loadUsers()
@@ -32,7 +34,7 @@ class UserViewModel(
             _uiState.value = UserUiState(isLoading = true)
 
             try {
-                val users = repository.getUsers()
+                val users = repository.getPosts()
                 _uiState.value = UserUiState(users = users)
             } catch (e: Exception) {
                 _uiState.value = UserUiState(error = e.message)

@@ -1,6 +1,6 @@
 package experimnetal.projects
 
-data class User(val userId:Int,val id:Int,val title: String,val body: String)
+data class Post(val userId:Int,val id:Int,val title: String,val body: String)
 
 data class LoginRequest(
     val username: String,
@@ -14,6 +14,6 @@ data class LoginResponse(
 
 data class UserUiState(
     val isLoading: Boolean = false,
-    val users: List<User> = emptyList(),
+    val users: List<Post> = emptyList(),
     val error: String? = null
 )
