@@ -59,43 +59,76 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
 
-class MainActivity: ComponentActivity() {
+class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Scaffold {
-              UserTableScreen( viewModel(),
-                  modifier=Modifier.padding(it))
+            Scaffold { padding ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                ) {
+                    Text(
+                        "234",
+                        fontSize = 24.sp,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    UserTableScreenWithVM(
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
-
-    }
         }
     }
+}
 
 
 @Composable
-fun UserTableScreen(viewModel: UserViewModel,modifier: Modifier) {
+fun UserTableScreenWithVM(modifier: Modifier = Modifier) {
+    val api = NetworkModule.api
+    val repository = UserRepository(api)
+
+    val viewModel: UserViewModel = viewModel(
+        factory = UserViewModelFactory(repository)
+    )
+
+    UserTableScreen(viewModel = viewModel, modifier = modifier)
+}
+
+
+
+@Composable
+fun UserTableScreen(viewModel: UserViewModel, modifier: Modifier = Modifier) {
 
     val state by viewModel.uiState.collectAsState()
 
     when {
         state.isLoading -> {
-            CircularProgressIndicator()
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
 
         state.error != null -> {
-            Text("Ошибка: ${state.error}",
-                modifier=modifier,
-                fontSize = 20.sp)
+            Text(
+                "Ошибка: ${state.error}",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 20.sp
+            )
         }
 
         else -> {
-            Column(modifier = modifier) {
+            Column(modifier = modifier.fillMaxSize()) {
                 TableHeader()
-
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
                     items(state.users) { user ->
                         UserRow(user)
                         Divider()
@@ -107,6 +140,8 @@ fun UserTableScreen(viewModel: UserViewModel,modifier: Modifier) {
 }
 
 
+
+
 @Composable
 fun UserRow(user: Post) {
     Row(
@@ -116,8 +151,8 @@ fun UserRow(user: Post) {
     ) {
         Text(user.userId.toString(), Modifier.weight(1f))
         Text(user.id.toString(), Modifier.weight(2f))
-        Text(user.title, Modifier.weight(3f))
-        Text(user.body, Modifier.weight(4f))
+        Text(user.title?:"", Modifier.weight(3f))
+        Text(user.body?:"", Modifier.weight(4f))
     }
 }
 
@@ -131,8 +166,9 @@ fun TableHeader() {
             .background(Color.LightGray)
             .padding(8.dp)
     ) {
-        Text("ID", Modifier.weight(1f))
-        Text("Name", Modifier.weight(2f))
-        Text("Email", Modifier.weight(3f))
+        Text("UserId", Modifier.weight(1f))
+        Text("Id", Modifier.weight(2f))
+        Text("Title", Modifier.weight(3f))
+        Text("Body", Modifier.weight(4f))
     }
 }
