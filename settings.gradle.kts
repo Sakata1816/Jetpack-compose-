@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "JetpacKompose"
+rootProject.name = "network experience"
 include(":app")
- 
