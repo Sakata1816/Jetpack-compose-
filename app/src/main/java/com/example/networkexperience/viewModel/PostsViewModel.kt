@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.Request
 import javax.inject.Inject
 import kotlin.jvm.java
 
@@ -25,29 +26,34 @@ import kotlin.jvm.java
 
 
 @HiltViewModel
-class UserViewModel @Inject constructor(private val PostRepository: UserRepository,private val ComRepository: CommentRepository) : ViewModel() {
-    var page by mutableStateOf(1)
-        private set
+class UserViewModel @Inject constructor(private val PostRepository: UserRepository) : ViewModel() {
 
-    fun nextPage() {
-        page += 1
-    loadComments()
-    }
-    fun prevPage() {
-        if(page > 0) page -= 1
-    loadComments()
-    }
     private val _state = MutableStateFlow(UserUIState())
-    private val _comState=MutableStateFlow(UserUIState())
-
-    val comState= _comState.asStateFlow()
     val state = _state.asStateFlow()
+    var id by mutableStateOf(1)
+        private set
 
 
     init {
         loadUsers()
-        loadComments()
     }
+
+    fun getPosts() {
+        getPostsId()
+    }
+
+    private fun getPostsId() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            try {
+                val posts = PostRepository.getPosts(id)
+                _state.update { it.copy(posts = posts, isLoading = false) }
+            } catch (e: Exception) {
+                _state.update { it.copy(error = e.message, isLoading = false) }
+            }
+        }
+    }
+
     private fun loadUsers() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
@@ -58,21 +64,142 @@ class UserViewModel @Inject constructor(private val PostRepository: UserReposito
                 _state.update { it.copy(error = e.message, isLoading = false) }
             }
         }
-
     }
 
-    private fun loadComments() {
+    fun loadPostsComments() {
         viewModelScope.launch {
-            _comState.update { it.copy(isLoading = true, error = null) }
+            _state.update {
+                it.copy(isLoading = true, error = null)
+            }
             try {
-                val comments = ComRepository.getComments(page)
-                _comState.update { it.copy(comments = comments, isLoading = false) }
-            }catch (e:Exception){
-                _comState.update { it.copy(error = e.message, isLoading = false) }
+                val postsComment = PostRepository.getPostsComments(id)
+                _state.update {
+                    it.copy(comments = postsComment, isLoading = false)
+                }
+            }catch(e: Exception) {
+                _state.update {
+                    it.copy(error = e.message, isLoading = false)
+                }
+            }
+        }
+    }
+
+
+    fun postPosts(request: Post) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+try{
+    val response = PostRepository.postPost(request)
+    if (response.isSuccessful) {
+        val createdPost = response.body()
+        _state.update {
+            it.copy(posts = it.posts + listOf(createdPost!!), isLoading = false)
+        }
+}else{
+    val errorCode = response.code()
+    val errorBody = response.errorBody()?.string()
+    println("Ошибка! Код: $errorCode, тело ошибки: $errorBody")
+    }
+}catch (e: Exception) {
+    _state.update { it.copy(error = e.message, isLoading = false) }
+}
+        }
+    }
+
+
+    fun putPosts(postId: Int, request: Post) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            try {
+                val response = PostRepository.putPosts(postId, request)
+                if (response.isSuccessful) {
+                    val updatedPost = response.body()
+
+                    if (updatedPost != null) {
+                        _state.update { currentState ->
+                            val newPosts = currentState.posts.map { post ->
+                                if (post.id == postId) updatedPost else post
+                            }
+                            currentState.copy(posts = newPosts, isLoading = false)
+                        }
+                    } else {
+                        _state.update { it.copy(isLoading = false) }
+                    }
+                }else{
+                    val errorCode = response.code()
+                    val errorBody = response.errorBody()?.string()
+                    println("Ошибка! Код: $errorCode, тело ошибки: $errorBody")
+                }
+            }catch (e: Exception) {
+                _state.update { it.copy(error = e.message, isLoading = false) }
             }
         }
         }
+
+
+    fun patchPosts(postId: Int, request: Map<String, Any>) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            try {
+                val response = PostRepository.patchPosts(postId, request)
+
+                if (response.isSuccessful) {
+                    val updatedPost = response.body()
+
+                    _state.update { currentState ->
+                        val newPosts = if (updatedPost != null) {
+                            currentState.posts.map { post ->
+                                if (post.id == updatedPost.id) updatedPost else post
+                            }
+                        } else {
+                            currentState.posts
+                        }
+                        currentState.copy(posts = newPosts, isLoading = false)
+                    }
+
+                } else {
+                    val errorMsg = "Ошибка ${response.code()}: ${response.errorBody()?.string()}"
+                    _state.update { it.copy(error = errorMsg, isLoading = false) }
+                }
+
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(error = e.message ?: "Неизвестная ошибка", isLoading = false)
+                }
+            }
+        }
     }
+
+
+    fun deletePosts(postId: Int) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            try {
+                val deletedPost = PostRepository.deletePosts(postId)
+                _state.update { currentState ->
+                    val newPosts = currentState.posts.filter { it.id != postId }
+                    currentState.copy(posts = newPosts, isLoading = false)
+                }
+            }catch (e: Exception){
+                _state.update { it.copy(error = e.message, isLoading = false) }
+            }
+
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

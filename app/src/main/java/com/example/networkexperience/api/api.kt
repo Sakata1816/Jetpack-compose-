@@ -1,6 +1,7 @@
 package com.example.networkexperience.api
 
 import com.example.networkexperience.data.*
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -9,6 +10,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+
 
 
 //интерфейсы для запросов к серверу
@@ -24,16 +26,16 @@ interface UserApi{
     suspend fun getPostsComments(@Path("userId") userId: Int): List<Comment>
 
     @POST("/posts")
-    suspend fun postPosts(@Body post: Post): Post
+    suspend fun postPost(@Body post: Post): Response<Post>
 
     @PUT("/posts/{postId}")
-    suspend fun putPosts(@Path("postId") postId: Int, @Body post: Post): Post
+    suspend fun putPosts(@Path("postId") postId: Int, @Body post: Post): Response<Post>
 
     @PATCH("/posts/{postId}")
-    suspend fun patchPosts(@Path("postId") postId: Int, @Body post: Post): Post
+    suspend fun patchPosts(@Path("postId") postId: Int, @Body field:Map<String,Any>): Response<Post>
 
     @DELETE("/posts/{postId}")
-    suspend fun deletePosts(@Path("postId") postId: Int): List<Post>
+    suspend fun deletePosts(@Path("postId") postId: Int): Response<Unit>
 }
 
 interface CommentApi{

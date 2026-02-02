@@ -1,10 +1,10 @@
 package com.example.networkexperience.data
 
 //создаются классы для данных которыебудут парсить json(получать или отправлять данные)
-data class Post(val userId:Int?,
-                val id:Int?,
-                val title:String?,
-                val body:String?)
+data class Post(val userId:Int?=null,
+                val id:Int?=null,
+                val title:String?=null,
+                val body:String?=null)
 
 data class Comment(val postId:Int?,
                    val id:Int?,
