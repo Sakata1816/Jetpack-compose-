@@ -1,12 +1,14 @@
 package com.example.networkexperience.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.networkexperience.Repositories.UserRepository
 import com.example.networkexperience.data.Post
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +23,13 @@ class PostChange @Inject constructor(private val PostRepository: UserRepository)
             title = post.title,
             body = post.body) }
 
+    }
+
+    fun PostUser(){
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+
+        }
     }
 
 }
