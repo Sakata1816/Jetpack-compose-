@@ -2,6 +2,7 @@ package com.example.networkexperience.Screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,27 +33,35 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.networkexperience.data.Comment
 import com.example.networkexperience.data.Post
+import com.example.networkexperience.navRoutes.Navigator
 import com.example.networkexperience.viewModel.CommentsViewModel
 import com.example.networkexperience.viewModel.UserViewModel
 
 @Composable
-fun PostsAndComments(){
+fun PostsAndComments(navController: NavController){
+
     Scaffold(modifier= Modifier.fillMaxSize()){
         Column(modifier = Modifier.padding(it)
             .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            PostsScreen()
+            PostsScreen({id->
+                navController.navigate("Post/$id")
+            }
+            )
+        }
+            Divider()
             CommentsScreen()
         }
 
     }
-}
+
 
 
 @Composable
-fun PostsScreen(vm: UserViewModel= hiltViewModel()){
+fun PostsScreen(onItemClick:(Int?)-> Unit, vm: UserViewModel= hiltViewModel()){
     val state by vm.state.collectAsState()
     when{
         state.isLoading ->  Box(
@@ -69,7 +78,7 @@ fun PostsScreen(vm: UserViewModel= hiltViewModel()){
             TitlePosts()
             LazyColumn() {
                 items(state.posts){i->
-                    PostsRow(posts = i)
+                    PostsRow(posts = i,onItemClick = onItemClick )
                     Divider()
                 }
             }
@@ -170,8 +179,11 @@ fun TitleComments(){
 
 
 @Composable
-fun PostsRow(posts: Post){
-    Row (modifier = Modifier.fillMaxWidth()){
+fun PostsRow(posts: Post,onItemClick:(Int?)->Unit){
+    Row (modifier = Modifier.fillMaxWidth()
+        .clickable(enabled = posts.id != null) {
+            posts.id?.let { onItemClick(it) }
+        }){
         Text(text = posts.userId.toString(),
             fontSize = 24.sp,
             modifier = Modifier.weight(1f))

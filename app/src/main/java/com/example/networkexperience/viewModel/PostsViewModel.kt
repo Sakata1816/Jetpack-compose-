@@ -30,19 +30,16 @@ class UserViewModel @Inject constructor(private val PostRepository: UserReposito
 
     private val _state = MutableStateFlow(UserUIState())
     val state = _state.asStateFlow()
-    var id by mutableStateOf(1)
-        private set
+/*    var id by mutableStateOf(1)
+        private set*/
 
 
     init {
         loadUsers()
     }
 
-    fun getPosts() {
-        getPostsId()
-    }
 
-    private fun getPostsId() {
+   fun getPostsId(id:Int) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
             try {
@@ -66,7 +63,7 @@ class UserViewModel @Inject constructor(private val PostRepository: UserReposito
         }
     }
 
-    fun loadPostsComments() {
+    fun loadPostsComments(id:Int) {
         viewModelScope.launch {
             _state.update {
                 it.copy(isLoading = true, error = null)
