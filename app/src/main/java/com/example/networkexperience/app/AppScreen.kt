@@ -40,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.networkexperience.Screens.ScreensColumn
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,7 +66,19 @@ fun Menu(modifier: Modifier= Modifier) {
                         .padding(8.dp)
                 ) {
                     Column() {
-
+                        ScreensColumn(onItemClick = { route ->
+                            scope.launch {
+                                drawerState.close()
+                            }
+                            navController.navigate(route) {
+                                launchSingleTop = true
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                restoreState = true
+                            }
+                        }
+                        )
                     }
 
                 }
@@ -78,6 +91,8 @@ fun Menu(modifier: Modifier= Modifier) {
                 }) {
                     Icon(Icons.Filled.Menu, "Меню")
                 }
+                AppNavGraph(navController)
+
 
             }
 

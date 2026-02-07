@@ -43,20 +43,18 @@ import com.example.networkexperience.viewModel.UserViewModel
 @Composable
 fun PostsAndComments(navController: NavController){
 
-    Scaffold(modifier= Modifier.fillMaxSize()){
-        Column(modifier = Modifier.padding(it)
+        Column(modifier = Modifier.padding(3.dp)
             .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)) {
             PostsScreen({id->
-                navController.navigate("Post/$id")
-            }
-            )
-        }
+                navController.navigate("Post/$id") })
             Divider()
             CommentsScreen()
         }
 
-    }
+        }
+
+
 
 
 

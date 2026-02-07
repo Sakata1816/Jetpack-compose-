@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.networkexperience.app.Menu
 import com.example.networkexperience.data.Comment
 import com.example.networkexperience.data.Post
 import com.example.networkexperience.viewModel.UserViewModel
@@ -57,6 +58,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            Menu()
         }
     }
 

@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(private val api: UserApi){
     suspend fun getPosts()=api.getPosts()
-    suspend fun getPosts(userId:Int)=api.getPosts(userId)
+    suspend fun getPosts(userId:Int):Response<Post> = api.getPosts(userId)
     suspend fun getPostsComments(postId:Int)=api.getPostsComments(postId)
     suspend fun postPost(post: Post): Response<Post> {
         return api.postPost(post)

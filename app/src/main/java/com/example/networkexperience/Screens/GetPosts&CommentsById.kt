@@ -58,13 +58,13 @@ fun GetPost(id:Int) {
                     .size(200.dp)
             )
 
-            else -> LazyRow(modifier = Modifier.padding(it)) {
-                items(state.posts.size) { i ->
-                    val post = state.posts[i]
-                    PostInfo(post = post)
-                    Spacer(modifier = Modifier.size(200.dp))
+            else -> {
+                state.post?.let { post ->
+                    PostInfo(postFromUser = post, postVM = postVM)
                 }
             }
+
+
         }
     }
 }
@@ -72,7 +72,15 @@ fun GetPost(id:Int) {
 
 
 @Composable
-fun PostInfo(post: Post,vm: PostChange=viewModel(),postVM: UserViewModel= hiltViewModel()) {
+fun PostInfo(postFromUser:Post, vm: PostChange =viewModel(), postVM: UserViewModel) {
+
+    val post by vm.state.collectAsState()
+
+    // инициализируем editable пост один раз
+    LaunchedEffect(postFromUser) {
+        vm.setPost(postFromUser)
+    }
+
     Column() {
         TextField(
             value = post.userId.toString(),

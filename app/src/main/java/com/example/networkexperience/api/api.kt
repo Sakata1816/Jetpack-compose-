@@ -20,7 +20,7 @@ interface UserApi{
     suspend fun getPosts(): List<Post>
 
     @GET("/posts/{userId}")
-    suspend fun getPosts(@Path("userId") userId: Int): List<Post>
+    suspend fun getPosts(@Path("userId") userId: Int): Response<Post>
 
     @GET("/posts/{userId}/comments")
     suspend fun getPostsComments(@Path("userId") userId: Int): List<Comment>

@@ -12,15 +12,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class PostChange @Inject constructor(private val PostRepository: UserRepository) : ViewModel() {
+class PostChange() : ViewModel() {
 
     private val _state= MutableStateFlow(Post())
     val state=_state.asStateFlow()
 
-    private val _state2= MutableStateFlow(UserUIState())
-    val state2=_state2.asStateFlow()
-
+    fun setPost(post: Post) {
+        _state.value = post  // инициализация поста
+    }
 
     fun OnValueChange(post: Post) {
         _state.update { it.copy(userId = post.userId,

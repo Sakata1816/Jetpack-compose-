@@ -18,7 +18,7 @@ import kotlin.collections.plusAssign
 import kotlin.compareTo
 
 @HiltViewModel
-class CommentsViewModel(@Inject private val repository: CommentRepository) : ViewModel() {
+class CommentsViewModel @Inject constructor(private val repository: CommentRepository) : ViewModel() {
 
     var page by mutableStateOf(1)
         private set

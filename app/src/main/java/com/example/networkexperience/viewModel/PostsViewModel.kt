@@ -43,8 +43,15 @@ class UserViewModel @Inject constructor(private val PostRepository: UserReposito
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
             try {
-                val posts = PostRepository.getPosts(id)
-                _state.update { it.copy(posts = posts, isLoading = false) }
+                val post = PostRepository.getPosts(id)
+                if(post.isSuccessful){
+                    val postBody = post.body()
+                    _state.update { it.copy(post = postBody, isLoading = false) }
+                }else{
+                    val errorCode = post.code()
+                    val errorBody = post.errorBody()?.string()
+                    println("Ошибка! Код: $errorCode, тело ошибки: $errorBody")
+                }
             } catch (e: Exception) {
                 _state.update { it.copy(error = e.message, isLoading = false) }
             }
