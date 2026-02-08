@@ -18,5 +18,7 @@ data class UserUIState(val isLoading:Boolean=false,
                        val posts:List<Post> = emptyList(),
                        val post: Post? = null,
                        val comments:List<Comment> = emptyList(),
-                       val error:String?=null )
+                       val error:String?=null ,
+                       val saveSuccess: Boolean? = null   // <-- добавили
+)
 

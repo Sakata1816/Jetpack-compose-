@@ -50,7 +50,6 @@ fun Menu(modifier: Modifier= Modifier) {
     val navController = rememberNavController()
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val drawerWidth = screenWidth * 0.3f // 30% ширины
 
     Scaffold(Modifier.fillMaxSize()) {it->
 
@@ -61,7 +60,7 @@ fun Menu(modifier: Modifier= Modifier) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .width(drawerWidth)
+                        .width(300.dp)
                         .background(Color.LightGray)
                         .padding(8.dp)
                 ) {
@@ -69,21 +68,21 @@ fun Menu(modifier: Modifier= Modifier) {
                         ScreensColumn(onItemClick = { route ->
                             scope.launch {
                                 drawerState.close()
-                            }
-                            navController.navigate(route) {
-                                launchSingleTop = true
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = false
+                                    }
+                                    launchSingleTop = true
                                 }
-                                restoreState = true
                             }
+
                         }
                         )
                     }
 
                 }
             },
-            scrimColor = Color.DarkGray
+            scrimColor = Color.Black.copy(alpha = 0.3f)
         ) {
             Column() {
                 IconButton(onClick = {

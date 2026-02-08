@@ -91,24 +91,56 @@ class UserViewModel @Inject constructor(private val PostRepository: UserReposito
 
     fun postPosts(request: Post) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-try{
-    val response = PostRepository.postPost(request)
-    if (response.isSuccessful) {
-        val createdPost = response.body()
-        _state.update {
-            it.copy(posts = it.posts + listOf(createdPost!!), isLoading = false)
+            _state.update { it.copy(isLoading = true, error = null, saveSuccess = null) }
+
+            try {
+                val response = PostRepository.postPost(request)
+
+                if (response.isSuccessful) {
+                    val createdPost = response.body()
+
+                    if (createdPost != null) {
+                        _state.update {
+                            it.copy(
+                                post = createdPost,
+                                isLoading = false,
+                                saveSuccess = true
+                            )
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                saveSuccess = false,
+                                error = "Ответ успешный, но body пустой"
+                            )
+                        }
+                    }
+                } else {
+                    val errorCode = response.code()
+                    val errorBody = response.errorBody()?.string()
+
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            saveSuccess = false,
+                            error = "Ошибка $errorCode: $errorBody"
+                        )
+                    }
+                }
+
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        error = e.message,
+                        isLoading = false,
+                        saveSuccess = false
+                    )
+                }
+            }
         }
-}else{
-    val errorCode = response.code()
-    val errorBody = response.errorBody()?.string()
-    println("Ошибка! Код: $errorCode, тело ошибки: $errorBody")
     }
-}catch (e: Exception) {
-    _state.update { it.copy(error = e.message, isLoading = false) }
-}
-        }
-    }
+
 
 
     fun putPosts(postId: Int, request: Post) {
@@ -190,6 +222,11 @@ try{
 
         }
     }
+
+    fun clearSaveResult() {
+        _state.update { it.copy(saveSuccess = null) }
+    }
+
 
 
 }

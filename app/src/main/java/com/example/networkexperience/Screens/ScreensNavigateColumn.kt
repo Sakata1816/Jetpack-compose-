@@ -6,16 +6,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-
-
-
-
+import com.example.networkexperience.navRoutes.Navigator
 
 
 @Composable
 fun ScreensColumn (onItemClick:(String)-> Unit){
     Column {
-        Screens("Posts&Comments","PostsAndComments",onItemClick )
+        Screens("Posts&Comments", Navigator.PostsAndComments.route,onItemClick )
     }
 }
 
