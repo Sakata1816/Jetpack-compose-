@@ -1,6 +1,6 @@
-package DataBase.example.data.local.dao
+package DataBase.example.data.data.local.dao
 
-import DataBase.example.data.local.entity.UserEntity
+import DataBase.example.data.data.local.entity.UserEntity
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao{
 
     @Query("SELECT * FROM users")
-    suspend fun getAllUsers():List<UserEntity>
+     fun getUsers(): Flow<List<UserEntity>>
 
     @Update
     suspend fun updateUser(user: UserEntity)
@@ -33,7 +33,7 @@ interface UserDao{
     suspend fun insertUser(user: UserEntity)
 
     @Delete
-    suspend fun deleteUser(user: UserEntity)
+    suspend fun deleteUser(id: Int)
 
     @Query("SELECT * FROM users WHERE id = :id")
     fun getUserById(id: Int): Flow<UserEntity?>

@@ -1,7 +1,7 @@
-package DataBase.example.data.local.db
+package DataBase.example.data.data.local.db
 
-import DataBase.example.data.local.dao.UserDao
-import DataBase.example.data.local.entity.UserEntity
+import DataBase.example.data.data.local.dao.UserDao
+import DataBase.example.data.data.local.entity.UserEntity
 import androidx.room.Database
 import androidx.room.RoomDatabase
 

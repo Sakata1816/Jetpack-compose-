@@ -1,4 +1,4 @@
-package DataBase.example.data.local.entity
+package DataBase.example.data.data.local.entity
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
