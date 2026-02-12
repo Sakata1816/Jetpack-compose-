@@ -1,6 +1,6 @@
 package DataBase.example.data.mapper
 
-import DataBase.example.data.domain.domainModel.User
+import DataBase.example.data.domain.model.User
 import DataBase.example.data.data.local.entity.UserEntity
 
 fun UserEntity.toDomain(): User {

@@ -1,4 +1,4 @@
-package DataBase.example.data.domain.domainModel
+package DataBase.example.data.domain.model
 
 data class User(
     val id: Int,
