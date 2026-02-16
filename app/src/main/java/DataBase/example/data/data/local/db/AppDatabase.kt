@@ -1,6 +1,8 @@
 package DataBase.example.data.data.local.db
 
+import DataBase.example.data.data.local.dao.FavoriteAnimeDao
 import DataBase.example.data.data.local.dao.UserDao
+import DataBase.example.data.data.local.entity.FavoriteAnimeEntity
 import DataBase.example.data.data.local.entity.UserEntity
 import android.app.Application
 import androidx.room.Database
@@ -12,8 +14,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Database(entities = [UserEntity::class], version = 1)
+@Database(entities = [FavoriteAnimeEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun userDao(): UserDao
+    abstract fun favouriteAnimeDao(): FavoriteAnimeDao
 }
 

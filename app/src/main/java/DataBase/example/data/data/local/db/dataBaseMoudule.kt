@@ -1,5 +1,6 @@
 package DataBase.example.data.data.local.db
 
+import DataBase.example.data.data.local.dao.FavoriteAnimeDao
 import DataBase.example.data.data.local.dao.UserDao
 import android.app.Application
 import androidx.room.Room
@@ -24,7 +25,7 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideUserDao(db: AppDatabase): UserDao {
-        return db.userDao()
+    fun provideUserDao(db: AppDatabase): FavoriteAnimeDao {
+        return db.favouriteAnimeDao()
     }
 }

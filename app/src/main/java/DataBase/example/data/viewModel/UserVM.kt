@@ -1,6 +1,6 @@
 package DataBase.example.data.viewModel
 
-import DataBase.example.data.data.UserState
+import DataBase.example.data.domain.model.UserState
 import DataBase.example.data.domain.model.User
 import DataBase.example.data.domain.repository.UserRepository
 import androidx.lifecycle.ViewModel

@@ -1,7 +1,10 @@
 package DataBase.example.data.domain.model
 
-data class User(
-    val id: Int,
-    val name: String?,
-    val email: String?
+import androidx.room.PrimaryKey
+
+data class FavoriteAnime(
+    val mal_id: Int,
+    val title: String,
+    val imageUrl: String?,
+    val score: Double?
 )
