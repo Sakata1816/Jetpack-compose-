@@ -1,6 +1,6 @@
 package DataBase.example.data.domain.model
 
-import DataBase.example.data.data.local.dao.FavoriteAnimeDao
+import DataBase.example.data.domain.model.local.FavoriteAnime
 
 data class UserState(
     val users: List<FavoriteAnime> = emptyList(),

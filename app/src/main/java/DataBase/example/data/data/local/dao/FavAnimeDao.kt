@@ -14,10 +14,10 @@ interface FavoriteAnimeDao {
     suspend fun getAll(): List<FavoriteAnimeEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(anime: FavoriteAnimeEntity)
+    suspend fun insertAnime(anime: FavoriteAnimeEntity)
 
     @Delete
-    suspend fun delete(anime: FavoriteAnimeEntity)
+    suspend fun deleteAnime(anime: FavoriteAnimeEntity)
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_anime WHERE mal_id = :id)")
     suspend fun isFavorite(id: Int): Boolean
