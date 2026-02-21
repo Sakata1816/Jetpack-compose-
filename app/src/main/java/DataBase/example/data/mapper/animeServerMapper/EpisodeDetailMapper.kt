@@ -3,6 +3,7 @@ package DataBase.example.data.mapper.animeServerMapper
 import DataBase.example.data.data.server.DTO.AnimeEpisodeDetailResponse
 import DataBase.example.data.data.server.DTO.EpisodeDetailDto
 import DataBase.example.data.domain.model.server.EpisodeDetailModel
+import DataBase.example.data.domain.model.server.EpisodeDetailResponseModel
 
 fun EpisodeDetailDto.toModel(): EpisodeDetailModel {
     return EpisodeDetailModel(
@@ -19,6 +20,8 @@ fun EpisodeDetailDto.toModel(): EpisodeDetailModel {
     )
 }
 
-fun AnimeEpisodeDetailResponse.toModel(): EpisodeDetailModel {
-    return data.toModel()
+fun AnimeEpisodeDetailResponse.toModel(): EpisodeDetailResponseModel {
+    return EpisodeDetailResponseModel(
+        data = data.toModel()
+    )
 }

@@ -9,8 +9,10 @@ import DataBase.example.data.domain.model.server.AnimeDetailModel
 import DataBase.example.data.domain.model.server.AnimeDetailResponseModel
 import DataBase.example.data.domain.model.server.AnimeEpisodesModel
 import DataBase.example.data.domain.model.server.AnimeFullModel
-import DataBase.example.data.domain.model.server.CharacterModel
+import DataBase.example.data.domain.model.server.CharacterItemModel
+import DataBase.example.data.domain.model.server.CharactersResponseModel
 import DataBase.example.data.domain.model.server.EpisodeDetailModel
+import DataBase.example.data.domain.model.server.EpisodeDetailResponseModel
 import DataBase.example.data.domain.model.server.EpisodeModel
 import DataBase.example.data.domain.repository.AnimeRepository
 import DataBase.example.data.mapper.animeLocalMapper.toDomain
@@ -36,7 +38,7 @@ class AnimeRepositoryImpl @Inject constructor(
             api.getAnimeInfo(id).toModel()
         }
 
-    override suspend fun getAnimeCharacters(id: Int): Result<List<CharacterModel>> =
+    override suspend fun getAnimeCharacters(id: Int): Result<CharactersResponseModel> =
         runCatching {
             api.getAnimeCharacters(id).toModel()
         }
@@ -46,7 +48,7 @@ class AnimeRepositoryImpl @Inject constructor(
             api.getAnimeEpisodes(id, page).toModel()
         }
 
-    override suspend fun getAnimeEpisodeDetail(id: Int, episodeNum: Int): Result<EpisodeDetailModel> =
+    override suspend fun getAnimeEpisodeDetail(id: Int, episodeNum: Int): Result<EpisodeDetailResponseModel> =
         runCatching {
             api.getAnimeEpisodeDetail(id, episodeNum).toModel()
         }

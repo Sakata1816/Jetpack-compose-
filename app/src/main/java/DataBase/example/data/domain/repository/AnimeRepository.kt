@@ -11,16 +11,21 @@ import DataBase.example.data.domain.model.server.AnimeDetailModel
 import DataBase.example.data.domain.model.server.AnimeDetailResponseModel
 import DataBase.example.data.domain.model.server.AnimeEpisodesModel
 import DataBase.example.data.domain.model.server.AnimeFullModel
-import DataBase.example.data.domain.model.server.CharacterModel
+import DataBase.example.data.domain.model.server.CharacterItemModel
+import DataBase.example.data.domain.model.server.CharactersResponseModel
 import DataBase.example.data.domain.model.server.EpisodeDetailModel
+import DataBase.example.data.domain.model.server.EpisodeDetailResponseModel
 import DataBase.example.data.domain.model.server.EpisodeModel
 import retrofit2.Response
+
+
+
 interface AnimeRepository {
      suspend fun getAnimeFullInfo(id: Int): Result<AnimeFullModel>
      suspend fun getAnimeInfo(id: Int): Result<AnimeDetailResponseModel>
-     suspend fun getAnimeCharacters(id: Int): Result<List<CharacterModel>>
+     suspend fun getAnimeCharacters(id: Int): Result<CharactersResponseModel>
      suspend fun  getAnimeEpisodes(id: Int, page: Int): Result<AnimeEpisodesModel>
-     suspend fun  getAnimeEpisodeDetail(id: Int, episodeNum: Int): Result<EpisodeDetailModel>
+     suspend fun  getAnimeEpisodeDetail(id: Int, episodeNum: Int): Result<EpisodeDetailResponseModel>
 
 
      suspend fun getAllAnime(): Result<List<FavoriteAnimeModel>>

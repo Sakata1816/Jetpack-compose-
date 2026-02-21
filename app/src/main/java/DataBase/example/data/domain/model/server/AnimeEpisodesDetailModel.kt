@@ -1,5 +1,13 @@
 package DataBase.example.data.domain.model.server
 
+
+data class EpisodeDetailResponseModel(
+    val data: EpisodeDetailModel
+)
+
+
+
+
 data class EpisodeDetailModel(
     val id: Int,
     val title: String?,
