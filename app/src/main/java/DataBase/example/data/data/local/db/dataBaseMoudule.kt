@@ -1,7 +1,6 @@
 package DataBase.example.data.data.local.db
 
 import DataBase.example.data.data.local.dao.FavoriteAnimeDao
-import DataBase.example.data.data.local.dao.UserDao
 import android.app.Application
 import androidx.room.Room
 import dagger.Module

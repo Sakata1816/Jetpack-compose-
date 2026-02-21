@@ -1,2 +1,38 @@
 package DataBase.example.data.mapper.animeServerMapper
 
+import DataBase.example.data.data.server.DTO.AnimeDetailDto
+import DataBase.example.data.data.server.DTO.AnimeDetailResponse
+import DataBase.example.data.domain.model.server.AnimeDetailModel
+import DataBase.example.data.domain.model.server.AnimeDetailResponseModel
+
+fun AnimeDetailResponse.toModel(): AnimeDetailResponseModel {
+    return AnimeDetailResponseModel(
+        data = data.toModel()
+    )
+}
+
+fun AnimeDetailDto.toModel(): AnimeDetailModel {
+    return AnimeDetailModel(
+        id = mal_id,
+        title = title,
+        titleEnglish = title_english,
+        titleJapanese = title_japanese,
+        synopsis = synopsis,
+
+        images = images?.toModel(),
+
+        score = score,
+        rank = rank,
+        popularity = popularity,
+        episodes = episodes,
+        status = status,
+        year = year,
+        season = season,
+
+        trailer = trailer?.toModel(),
+
+        producers = producers.map { it.toModel() },
+        studios = studios.map { it.toModel() },
+        genres = genres.map { it.toModel() }
+    )
+}

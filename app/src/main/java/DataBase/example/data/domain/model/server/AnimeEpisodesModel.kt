@@ -2,8 +2,7 @@ package DataBase.example.data.domain.model.server
 
 data class AnimeEpisodesModel(
     val episodes: List<EpisodeModel>,
-    val lastVisiblePage: Int,
-    val hasNextPage: Boolean
+    val pagination: PaginationModel
 )
 
 data class EpisodeModel(
@@ -15,4 +14,10 @@ data class EpisodeModel(
     val isFiller: Boolean,
     val isRecap: Boolean
 )
+
+data class PaginationModel(
+    val lastVisiblePage: Int,
+    val hasNextPage: Boolean
+)
+
 

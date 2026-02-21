@@ -7,3 +7,5 @@ data class CharacterModel(
     val imageUrl: String?
 )
 
+data class CharacterResponseModel(val data: List<CharacterModel>)
+
