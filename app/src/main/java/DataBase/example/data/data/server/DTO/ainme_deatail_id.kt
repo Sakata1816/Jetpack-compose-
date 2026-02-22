@@ -1,5 +1,7 @@
 package DataBase.example.data.data.server.DTO
 
+
+data class AnimeResponse(val data: List<AnimeDetailDto>)
 data class AnimeDetailResponse(val data: AnimeDetailDto)
 
 data class AnimeDetailDto(

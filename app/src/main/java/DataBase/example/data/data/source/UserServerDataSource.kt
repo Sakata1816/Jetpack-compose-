@@ -5,6 +5,7 @@ import javax.inject.Inject
 
 class UserServerDataSource @Inject constructor(private val api: JikanApi) {
 
+    suspend fun getAllAnime() = api.getAllAnime()
     suspend fun getAnimeFullInfo(animeId: Int) = api.getAnimeFullInfo(animeId)
     suspend fun getAnimeInfo(animeId: Int) = api.getAnimeInfo(animeId)
     suspend fun getAnimeCharacters(animeId: Int) = api.getAnimeCharacters(animeId)

@@ -11,6 +11,7 @@ import DataBase.example.data.domain.model.server.AnimeDetailModel
 import DataBase.example.data.domain.model.server.AnimeDetailResponseModel
 import DataBase.example.data.domain.model.server.AnimeEpisodesModel
 import DataBase.example.data.domain.model.server.AnimeFullModel
+import DataBase.example.data.domain.model.server.AnimeResponseModel
 import DataBase.example.data.domain.model.server.CharacterItemModel
 import DataBase.example.data.domain.model.server.CharactersResponseModel
 import DataBase.example.data.domain.model.server.EpisodeDetailModel
@@ -21,6 +22,7 @@ import retrofit2.Response
 
 
 interface AnimeRepository {
+     suspend fun getAllAnimeList(): Result<AnimeResponseModel>
      suspend fun getAnimeFullInfo(id: Int): Result<AnimeFullModel>
      suspend fun getAnimeInfo(id: Int): Result<AnimeDetailResponseModel>
      suspend fun getAnimeCharacters(id: Int): Result<CharactersResponseModel>

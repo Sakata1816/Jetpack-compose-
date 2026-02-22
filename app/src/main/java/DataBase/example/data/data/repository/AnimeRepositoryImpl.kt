@@ -9,6 +9,7 @@ import DataBase.example.data.domain.model.server.AnimeDetailModel
 import DataBase.example.data.domain.model.server.AnimeDetailResponseModel
 import DataBase.example.data.domain.model.server.AnimeEpisodesModel
 import DataBase.example.data.domain.model.server.AnimeFullModel
+import DataBase.example.data.domain.model.server.AnimeResponseModel
 import DataBase.example.data.domain.model.server.CharacterItemModel
 import DataBase.example.data.domain.model.server.CharactersResponseModel
 import DataBase.example.data.domain.model.server.EpisodeDetailModel
@@ -27,6 +28,11 @@ class AnimeRepositoryImpl @Inject constructor(
 ) : AnimeRepository {
 
     // ---------------- SERVER ----------------
+
+    override suspend fun getAllAnimeList(): Result<AnimeResponseModel> =
+        runCatching {
+            api.getAllAnime().toModel()
+        }
 
     override suspend fun getAnimeFullInfo(id: Int): Result<AnimeFullModel> =
         runCatching {

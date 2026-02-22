@@ -5,6 +5,7 @@ import DataBase.example.data.data.server.DTO.AnimeDetailResponse
 import DataBase.example.data.data.server.DTO.AnimeEpisodeDetailResponse
 import DataBase.example.data.data.server.DTO.AnimeEpisodesResponse
 import DataBase.example.data.data.server.DTO.AnimeFullResponse
+import DataBase.example.data.data.server.DTO.AnimeResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -12,6 +13,10 @@ import retrofit2.http.Query
 
 
 interface JikanApi {
+
+    @GET("/anime")
+    suspend fun getAllAnime(): AnimeResponse
+
 
     @GET("/anime/{id}/full")
     suspend fun getAnimeFullInfo(@Path("id") animeId: Int): AnimeFullResponse

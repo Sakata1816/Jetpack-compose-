@@ -2,8 +2,17 @@ package DataBase.example.data.mapper.animeServerMapper
 
 import DataBase.example.data.data.server.DTO.AnimeDetailDto
 import DataBase.example.data.data.server.DTO.AnimeDetailResponse
+import DataBase.example.data.data.server.DTO.AnimeResponse
 import DataBase.example.data.domain.model.server.AnimeDetailModel
 import DataBase.example.data.domain.model.server.AnimeDetailResponseModel
+import DataBase.example.data.domain.model.server.AnimeResponseModel
+
+
+fun AnimeResponse.toModel(): AnimeResponseModel {
+    return AnimeResponseModel(
+        data = data.map { it.toModel() }
+    )
+}
 
 fun AnimeDetailResponse.toModel(): AnimeDetailResponseModel {
     return AnimeDetailResponseModel(

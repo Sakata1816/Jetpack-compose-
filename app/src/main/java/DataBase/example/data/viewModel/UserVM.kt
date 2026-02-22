@@ -1,8 +1,8 @@
 package DataBase.example.data.viewModel
 
+import DataBase.example.data.data.repository.AnimeRepositoryImpl
+import DataBase.example.data.domain.model.UserLocalState
 import DataBase.example.data.domain.model.UserState
-import DataBase.example.data.domain.model.User
-import DataBase.example.data.domain.repository.UserRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,11 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val repository: UserRepository
+    private val repository: AnimeRepositoryImpl
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(UserState())
-    val state: StateFlow<UserState> = _state
+    private val _state = MutableStateFlow()
+    val state: StateFlow<UserLocalState> = _state
 
     init {
         observeUsers() // сразу подписываемся на данные
