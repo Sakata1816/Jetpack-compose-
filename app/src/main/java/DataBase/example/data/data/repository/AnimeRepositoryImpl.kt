@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 
 class AnimeRepositoryImpl @Inject constructor(
-    private val api: JikanApi,
+    private val api: UserServerDataSource,
     private val local: UserLocalDataSource
 ) : AnimeRepository {
 
