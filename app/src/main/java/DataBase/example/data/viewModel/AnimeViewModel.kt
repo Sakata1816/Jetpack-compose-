@@ -1,45 +1,64 @@
 package DataBase.example.data.viewModel
 
+import DataBase.example.data.data.repository.AnimeRepositoryImpl
 import DataBase.example.data.domain.repository.AnimeRepository
-import DataBase.example.data.domain.state.server.AnimeFullUiState
+import DataBase.example.data.domain.state.server.AnimeDetailUiState
+import DataBase.example.data.domain.state.server.AnimeEpisodeDetailUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 
-
 @HiltViewModel
-class AnimeViewModel @Inject constructor(
-    private val repository: AnimeRepository
-): ViewModel(){
-    private val _state= MutableStateFlow(AnimeFullUiState())
+class AnimeViewModel @Inject constructor( val repository: AnimeRepositoryImpl): ViewModel() {
+    private val _state= MutableStateFlow(AnimeDetailUiState())
     val state=_state.asStateFlow()
 
-    private fun loadFullAnimeInfo(id:Int){
+    private fun loadAnimeInfo(id:Int){
         viewModelScope.launch {
-            _state.update { it.copy( isLoading = true, error = null) }
+            _state.update { it.copy(isLoading = true, error = null) }
+            supervisorScope {
+                val animeDeferred=async {
+                    repository.getAnimeInfo(id)
+                }
+                val charactersDeferred=async {
+                    repository.getAnimeCharacters(id)
+                }
 
-            repository.getAnimeFullInfo(id).fold(
-                onSuccess = { response ->
-                    _state.update { it.copy(
-                        anime = response, // данные из репо
-                        isLoading = false
-                    )
+                val animeResult = animeDeferred.await()
+                val charactersResult = charactersDeferred.await()
+
+                animeResult.onSuccess { response->
+                    _state.update { it.copy(anime=response.data) }
+                }
+                    .onFailure { throwable ->
+                        _state.update { it.copy(error=throwable.message) }
                     }
-                },
-                onFailure = { throwable ->
-                    _state.update { it.copy(
-                        error = throwable.message ?: "Unknown error",
-                        isLoading = false
-                    )
+
+                charactersResult.onSuccess { response ->
+                    _state.update {
+                        it.copy(characters = response.data)
+                    }
+                }.onFailure { throwable ->
+                    _state.update {
+                        it.copy(error = throwable.message)
                     }
                 }
-            )
+
+                _state.update { it.copy(isLoading = false) }
+
+            }
+
+
         }
     }
+
 }
