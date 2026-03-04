@@ -1,5 +1,6 @@
 package com.example.networkexperience
 
+import DataBase.example.data.navigation.RootScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TableRow
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent (){
-            Menu(Modifier.fillMaxSize())
+            RootScreen()
         }
     }
 

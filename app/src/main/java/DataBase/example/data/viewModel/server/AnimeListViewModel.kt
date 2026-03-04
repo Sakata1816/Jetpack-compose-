@@ -1,4 +1,4 @@
-package DataBase.example.data.viewModel
+package DataBase.example.data.viewModel.server
 
 import DataBase.example.data.data.repository.AnimeRepositoryImpl
 import DataBase.example.data.domain.state.server.AnimeListUiState
@@ -44,7 +44,6 @@ class AnimeListViewModel @Inject constructor(
             )
         }
     }
-
 
     }
 

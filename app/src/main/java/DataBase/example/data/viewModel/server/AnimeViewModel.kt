@@ -1,9 +1,7 @@
-package DataBase.example.data.viewModel
+package DataBase.example.data.viewModel.server
 
 import DataBase.example.data.data.repository.AnimeRepositoryImpl
-import DataBase.example.data.domain.repository.AnimeRepository
 import DataBase.example.data.domain.state.server.AnimeDetailUiState
-import DataBase.example.data.domain.state.server.AnimeEpisodeDetailUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 

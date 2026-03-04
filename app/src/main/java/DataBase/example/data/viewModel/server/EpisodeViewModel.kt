@@ -1,10 +1,8 @@
-package DataBase.example.data.viewModel
+package DataBase.example.data.viewModel.server
 
 import DataBase.example.data.domain.repository.AnimeRepository
 import DataBase.example.data.domain.state.server.AnimeEpisodeDetailUiState
-import DataBase.example.data.domain.state.server.AnimeEpisodesUiState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

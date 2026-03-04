@@ -1,4 +1,4 @@
-package DataBase.example.data.viewModel
+package DataBase.example.data.viewModel.server
 
 import DataBase.example.data.domain.repository.AnimeRepository
 import DataBase.example.data.domain.state.server.AnimeEpisodesUiState

@@ -1,4 +1,4 @@
-package com.example.networkexperience.application
+package DataBase.example.data.application
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
