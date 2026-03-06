@@ -23,9 +23,9 @@ rootProject.name = "network experience"
 include(":app")
 
 include(":com.example")
-include(":DataBase.example.data")
+include(":data")
 include(":Jetpack.Learning.l")
 
 project(":com.example").projectDir = file("com.example")
-project(":DataBase.example.data").projectDir = file("DataBase.example.data")
+project(":data").projectDir = file("data")
 project(":Jetpack.Learning.l").projectDir = file("Jetpack/Learning/l")

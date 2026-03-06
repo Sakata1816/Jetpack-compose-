@@ -10,7 +10,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Jetpack/Learning/l" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/com.example" />
+            <option value="$PROJECT_DIR$/data" />
           </set>
         </option>
       </GradleProjectSettings>
