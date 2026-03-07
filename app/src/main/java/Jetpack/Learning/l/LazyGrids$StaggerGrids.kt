@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.random.Random
 
+
+data class Language(val name: String,val color: Long)
 @Composable
 fun grids(){
     val langs = listOf(Language("Kotlin", 0xff16a085),
