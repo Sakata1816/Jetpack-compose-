@@ -1,18 +1,6 @@
 package com.example.networkexperience.app
 
-import Jetpack.Learning.l.About
-import Jetpack.Learning.l.Contacts
-import Jetpack.Learning.l.DrawerContent
-import Jetpack.Learning.l.FlowScreen
-import Jetpack.Learning.l.Home
-import Jetpack.Learning.l.Main
-import Jetpack.Learning.l.Samples
-import Jetpack.Learning.l.Screens
-import Jetpack.Learning.l.Titles
-import Jetpack.Learning.l.ViewObjs
-import Jetpack.Learning.l.increment
-import Jetpack.Learning.l.main1
-import Jetpack.Learning.l.scaffold
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
