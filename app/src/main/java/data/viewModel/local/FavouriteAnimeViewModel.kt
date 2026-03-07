@@ -6,6 +6,8 @@ import data.domain.state.local.FavouriteAnimeUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import data.data.repository.AnimeRepositoryImpl
+import data.data.repository.AnimeRepositoryImpl_Factory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,7 +16,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class FavouriteAnimeViewModel @Inject constructor(val repository: AnimeRepository): ViewModel() {
+class FavouriteAnimeViewModel @Inject constructor(val repository: AnimeRepositoryImpl): ViewModel() {
     val _state= MutableStateFlow(FavouriteAnimeUiState())
     val state=_state.asStateFlow()
 

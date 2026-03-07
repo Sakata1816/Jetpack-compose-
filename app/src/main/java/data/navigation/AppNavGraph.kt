@@ -7,9 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.networkexperience.Screens.GetPost
-import com.example.networkexperience.Screens.PostsAndComments
-import com.example.networkexperience.navRoutes.Navigator
+
 
 @Composable
 fun AppNavGraph(navController: NavHostController,modifier: Modifier) {

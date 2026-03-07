@@ -12,8 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.networkexperience.app.AppNavGraph
-import com.example.networkexperience.app.Menu
+
 
 @Composable
 fun RootScreen() {

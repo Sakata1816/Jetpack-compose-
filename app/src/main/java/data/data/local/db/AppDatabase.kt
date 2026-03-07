@@ -12,7 +12,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Database(entities = [FavoriteAnimeEntity::class], version = 1)
+@Database(entities = [FavoriteAnimeEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun favouriteAnimeDao(): FavoriteAnimeDao
 }
