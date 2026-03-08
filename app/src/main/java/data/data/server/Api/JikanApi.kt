@@ -14,19 +14,19 @@ import retrofit2.http.Query
 
 interface JikanApi {
 
-    @GET("/anime")
-    suspend fun getAllAnime(): AnimeResponse
+    @GET("anime")
+    suspend fun getAllAnime(@Query("page") page: Int): AnimeResponse
 
 
-    @GET("/anime/{id}/full")
+    @GET("anime/{id}/full")
     suspend fun getAnimeFullInfo(@Path("id") animeId: Int): AnimeFullResponse
 
 
-    @GET("/anime/{id}")
+    @GET("anime/{id}")
     suspend fun getAnimeInfo(@Path("id") animeId: Int): AnimeDetailResponse
 
 
-    @GET("/anime/{id}/characters")
+    @GET("anime/{id}/characters")
     suspend fun getAnimeCharacters(@Path("id") id: Int): AnimeCharactersResponse
 
 

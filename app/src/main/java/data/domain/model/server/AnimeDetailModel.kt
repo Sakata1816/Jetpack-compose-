@@ -1,7 +1,6 @@
 package data.domain.model.server
 
 
-data class AnimeResponseModel(val data: List<AnimeDetailModel>)
 
 data class AnimeDetailResponseModel(
     val data: AnimeDetailModel

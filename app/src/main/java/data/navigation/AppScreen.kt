@@ -41,7 +41,7 @@ fun BottomBar(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate("main")
+                navController.navigate("Main")
             },
             icon = { Icon(Icons.Default.Home, null) },
             label = { Text("Main") }
@@ -50,7 +50,7 @@ fun BottomBar(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate("favourite")
+                navController.navigate("FavouriteAnime")
             },
             icon = { Icon(Icons.Default.Favorite, null) },
             label = { Text("Favourite") }
@@ -59,7 +59,7 @@ fun BottomBar(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate("settings")
+                navController.navigate("Settings")
             },
             icon = { Icon(Icons.Default.Settings, null) },
             label = { Text("Settings") }

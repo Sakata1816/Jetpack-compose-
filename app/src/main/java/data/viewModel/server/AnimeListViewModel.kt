@@ -20,17 +20,31 @@ class AnimeListViewModel @Inject constructor(
 ) : ViewModel(){
     private val _state = MutableStateFlow(AnimeListUiState())
     val state: StateFlow<AnimeListUiState> = _state.asStateFlow()
+    private var isLoadingPage = false
 
 
-    private fun loadAnimeList() {
+init {
+    loadAnimeList()
+}
+
+    fun loadAnimeList() {
+        val uiState = _state.value
+
+        if (!uiState.hasNextPage || isLoadingPage) return
         viewModelScope.launch {
+            isLoadingPage = true
             _state.update { it.copy(isLoading = true, error = null) } // включаем загрузку
 
-            repository.getAllAnimeList().fold(
+            repository.getAllAnimeList(uiState.currentPage).fold(
                 onSuccess = { response ->
+                    val newList = uiState.anime + response.data
+                    val nextPage = (response.pagination.current_page ?: uiState.currentPage) + 1
+                    val hasNext = response.pagination.has_next_page ?: false
                     _state.update { it.copy(
-                            anime = response.data, // данные из репо
-                            isLoading = false
+                            anime = newList,
+                            isLoading = false,
+                        currentPage = nextPage,
+                        hasNextPage = hasNext
                         )
                     }
                 },
@@ -40,6 +54,7 @@ class AnimeListViewModel @Inject constructor(
                             isLoading = false
                         )
                     }
+                    isLoadingPage = false
                 }
             )
         }

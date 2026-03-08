@@ -8,11 +8,6 @@ import data.domain.model.server.AnimeDetailResponseModel
 import data.domain.model.server.AnimeResponseModel
 
 
-fun AnimeResponse.toModel(): AnimeResponseModel {
-    return AnimeResponseModel(
-        data = data.map { it.toModel() }
-    )
-}
 
 fun AnimeDetailResponse.toModel(): AnimeDetailResponseModel {
     return AnimeDetailResponseModel(

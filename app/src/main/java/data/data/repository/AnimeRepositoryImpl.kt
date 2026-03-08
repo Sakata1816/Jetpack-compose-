@@ -29,9 +29,9 @@ class AnimeRepositoryImpl @Inject constructor(
 
     // ---------------- SERVER ----------------
 
-    override suspend fun getAllAnimeList(): Result<AnimeResponseModel> =
+    override suspend fun getAllAnimeList(page: Int): Result<AnimeResponseModel> =
         runCatching {
-            api.getAllAnime().toModel()
+            api.getAllAnime(page).toModel()
         }
 
     override suspend fun getAnimeFullInfo(id: Int): Result<AnimeFullModel> =
