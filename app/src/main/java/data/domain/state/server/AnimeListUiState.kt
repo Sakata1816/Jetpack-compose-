@@ -8,5 +8,6 @@ data class AnimeListUiState(
     val anime: List<AnimeDetailModel> = emptyList(),
     val error: String? = null,
     val currentPage: Int = 1,
-    val hasNextPage: Boolean = true
+    val hasNextPage: Boolean = true,
+    val searchQuery: String = ""
 )

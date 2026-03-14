@@ -19,6 +19,7 @@ import data.domain.repository.AnimeRepository
 import data.mapper.animeLocalMapper.toDomain
 import data.mapper.animeLocalMapper.toEntity
 import data.mapper.animeServerMapper.toModel
+import org.w3c.dom.NameList
 import javax.inject.Inject
 
 
@@ -29,9 +30,9 @@ class AnimeRepositoryImpl @Inject constructor(
 
     // ---------------- SERVER ----------------
 
-    override suspend fun getAllAnimeList(page: Int): Result<AnimeResponseModel> =
+    override suspend fun getAllAnimeList(page: Int,name: String?): Result<AnimeResponseModel> =
         runCatching {
-            api.getAllAnime(page).toModel()
+            api.getAllAnime(page,name).toModel()
         }
 
     override suspend fun getAnimeFullInfo(id: Int): Result<AnimeFullModel> =

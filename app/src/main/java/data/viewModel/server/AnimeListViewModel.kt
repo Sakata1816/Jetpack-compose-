@@ -27,6 +27,25 @@ init {
     loadAnimeList()
 }
 
+
+    fun onSearchChange(query: String) {
+        _state.update {
+            it.copy(searchQuery = query)
+        }
+    }
+
+    fun searchAnime() {
+        _state.update {
+            it.copy(
+                anime = emptyList(),
+                currentPage = 1,
+                hasNextPage = true
+            )
+        }
+
+        loadAnimeList()
+    }
+
     fun loadAnimeList() {
         val uiState = _state.value
 
@@ -35,7 +54,7 @@ init {
             isLoadingPage = true
             _state.update { it.copy(isLoading = true, error = null) } // включаем загрузку
 
-            repository.getAllAnimeList(uiState.currentPage).fold(
+            repository.getAllAnimeList(uiState.currentPage,uiState.searchQuery).fold(
                 onSuccess = { response ->
                     val newList = uiState.anime + response.data
                     val nextPage = (response.pagination.current_page ?: uiState.currentPage) + 1
@@ -47,6 +66,8 @@ init {
                         hasNextPage = hasNext
                         )
                     }
+                    isLoadingPage = false
+
                 },
                 onFailure = { throwable ->
                     _state.update { it.copy(

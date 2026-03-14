@@ -6,8 +6,8 @@ import data.domain.model.server.EpisodeModel
 data class AnimeEpisodesUiState (
     val episode: List<EpisodeModel> = emptyList(),
     val isLoading: Boolean = false,          // первая загрузка
-    val isNextPageLoading: Boolean = false,  // догрузка
+    val lastVisiblePage:Int = 1,  // догрузка
     val currentPage: Int = 1,
-    val endReached: Boolean = false,
+    val hasNextPage: Boolean = true,
     val error: String? = null
 )

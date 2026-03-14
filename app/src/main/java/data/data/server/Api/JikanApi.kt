@@ -15,7 +15,8 @@ import retrofit2.http.Query
 interface JikanApi {
 
     @GET("anime")
-    suspend fun getAllAnime(@Query("page") page: Int): AnimeResponse
+    suspend fun getAllAnime(@Query("page") page: Int,
+                            @Query("q")name: String?): AnimeResponse
 
 
     @GET("anime/{id}/full")

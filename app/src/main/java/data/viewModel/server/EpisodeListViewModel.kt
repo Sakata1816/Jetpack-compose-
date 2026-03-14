@@ -4,6 +4,7 @@ import data.domain.repository.AnimeRepository
 import data.domain.state.server.AnimeEpisodesUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import data.data.repository.AnimeRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,14 +12,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class EpisodeListViewModel  @Inject constructor(
     private val repository: AnimeRepositoryImpl
 ): ViewModel(){
     private val _state= MutableStateFlow(AnimeEpisodesUiState())
-    private val state=_state.asStateFlow()
+    val state=_state.asStateFlow()
+    private var isLoadingPage = false
+
+
 
     // 🔹 Первая загрузка
-    fun loadFirstPage(animeId: Int) {
+ /*   fun loadFirstPage(animeId: Int) {
         _state.value = AnimeEpisodesUiState(isLoading = true)
 
         viewModelScope.launch {
@@ -79,6 +84,35 @@ class EpisodeListViewModel  @Inject constructor(
                         }
                     }
                 )
+        }
+    }
+*/
+
+    fun loadAnimeEpisodes(id:Int){
+        val uiState = _state.value
+
+        if (!uiState.hasNextPage || isLoadingPage) return
+        viewModelScope.launch {
+            isLoadingPage=true
+            _state.update { it.copy(isLoading = true, error = null) }
+            repository.getAnimeEpisodes(id,uiState.currentPage).fold(
+                onSuccess = {response->
+                    val newList = uiState.episode + response.episodes
+                    val nextPage = (response.pagination.lastVisiblePage?: uiState.currentPage) + 1
+                    val hasNext = response.pagination.hasNextPage?:false
+                    _state.update { it.copy(isLoading = false,
+                        episode =newList,
+                        hasNextPage = hasNext,
+                        currentPage = nextPage)
+                    }
+                    isLoadingPage = false
+                },
+                onFailure = {throwable ->
+                    _state.update { it.copy(isLoading = false,
+                        error = throwable.message?:"unknown error") }
+                    isLoadingPage = false
+                }
+            )
         }
     }
 }
