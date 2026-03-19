@@ -15,6 +15,8 @@ import data.domain.model.server.CharactersResponseModel
 import data.domain.model.server.EpisodeDetailModel
 import data.domain.model.server.EpisodeDetailResponseModel
 import data.domain.model.server.EpisodeModel
+import data.domain.model.server.StreamingLinkModel
+import data.domain.model.server.StreamingResponseModel
 import data.domain.repository.AnimeRepository
 import data.mapper.animeLocalMapper.toDomain
 import data.mapper.animeLocalMapper.toEntity
@@ -60,6 +62,12 @@ class AnimeRepositoryImpl @Inject constructor(
             api.getAnimeEpisodeDetail(id, episodeNum).toModel()
         }
 
+    override suspend fun getAnimeStreamingLink(id: Int): Result<StreamingResponseModel> =
+       runCatching {
+           api.getAnimeStreamingLink(id).toModel()
+       }
+
+
     // ---------------- LOCAL ----------------
 
     override suspend fun getAllAnime(): Result<List<FavoriteAnimeModel>> =
@@ -81,4 +89,6 @@ class AnimeRepositoryImpl @Inject constructor(
         runCatching {
             local.isFavorite(anime.toEntity())
         }
+
+
 }

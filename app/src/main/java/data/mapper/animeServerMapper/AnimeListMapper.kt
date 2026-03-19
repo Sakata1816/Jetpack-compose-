@@ -6,7 +6,6 @@ import data.data.server.DTO.PaginationItemsDto
 import data.domain.model.server.AnimeResponseModel
 import data.domain.model.server.PaginationAnimeModel
 import data.domain.model.server.PaginationItemsModel
-import kotlin.Int
 import kotlin.collections.map
 
 

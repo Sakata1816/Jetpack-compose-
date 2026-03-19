@@ -2,11 +2,8 @@ package data.mapper.animeServerMapper
 
 import data.data.server.DTO.AnimeDetailDto
 import data.data.server.DTO.AnimeDetailResponse
-import data.data.server.DTO.AnimeResponse
 import data.domain.model.server.AnimeDetailModel
 import data.domain.model.server.AnimeDetailResponseModel
-import data.domain.model.server.AnimeResponseModel
-
 
 
 fun AnimeDetailResponse.toModel(): AnimeDetailResponseModel {

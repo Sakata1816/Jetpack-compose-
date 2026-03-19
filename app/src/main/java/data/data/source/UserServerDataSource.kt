@@ -11,6 +11,7 @@ class UserServerDataSource @Inject constructor(private val api: JikanApi) {
     suspend fun getAnimeCharacters(animeId: Int) = api.getAnimeCharacters(animeId)
     suspend fun getAnimeEpisodes(animeId: Int, page: Int ) = api.getAnimeEpisodes(animeId, page)
     suspend fun getAnimeEpisodeDetail(animeId: Int, episodeNum: Int) = api.getAnimeEpisodeDetail(animeId, episodeNum)
+    suspend fun getAnimeStreamingLink(animeId: Int)=api.getAnimeStreamingLink(animeId)
 
 
 }
