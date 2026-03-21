@@ -14,7 +14,7 @@ import retrofit2.http.Query
 
 interface JikanApi {
 
-    @GET("/anime/{id}/streaming")
+    @GET("anime/{id}/streaming")
     suspend fun getAnimeStreamingLink(@Query("id")animeId: Int): StreamingResponse
 
     @GET("anime")

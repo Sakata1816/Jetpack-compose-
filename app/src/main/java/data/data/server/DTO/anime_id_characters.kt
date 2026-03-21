@@ -14,6 +14,6 @@ data class CharacterDto(
     val images: CharacterImagesDto?
 )
 
-data class CharacterImagesDto(val jpg: CharacterJpgDto?)
+data class CharacterImagesDto(val jpg: CharacterJpgDto?,val webp:CharacterWebpDto?)
 data class CharacterJpgDto(val image_url: String?)
-
+data class CharacterWebpDto(val image_url: String?)

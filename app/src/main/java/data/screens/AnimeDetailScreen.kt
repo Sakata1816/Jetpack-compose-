@@ -32,18 +32,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import data.domain.model.server.AnimeDetailModel
+import data.domain.model.server.CharacterItemModel
+import data.domain.model.server.CharactersResponseModel
 import data.navigation.NavRoute
+import data.viewModel.server.AnimeCharactersViewModel
 import data.viewModel.server.AnimeDetailViewModel
 
 @Composable
 fun AnimeDetailsScreen(
     animeId: Int?,
     navController: NavController,
-    viewModel: AnimeDetailViewModel = hiltViewModel()
+    viewModel: AnimeDetailViewModel = hiltViewModel(),
+    viewModelChar: AnimeCharactersViewModel=hiltViewModel()
 ) {
 
     LaunchedEffect(animeId) {
         viewModel.loadAnime(animeId?:0)
+        viewModelChar.loadCharacters(animeId?:0)
     }
 
     val state by viewModel.state.collectAsState()
@@ -60,12 +65,14 @@ fun AnimeDetailsScreen(
 
         state.anime != null -> {
             state.anime?.let { anime ->
-                AnimeDetailsContent(anime, onClick = {id->
+                AnimeDetailsContent( anime=anime, characters = state.characters, onClick = {id->
                 navController.navigate(NavRoute.Episodes.createRoute(id))
                 })
             }
         }
+
     }
+
 
 }
 
@@ -73,9 +80,9 @@ fun AnimeDetailsScreen(
 @Composable
 fun AnimeDetailsContent(
     anime: AnimeDetailModel,
+    characters: List<CharacterItemModel>,
     onClick:(Int)-> Unit
 ) {
-    val navController = rememberNavController()
     var currentScreen by remember { mutableStateOf(Screen.Screen1) }
 
 
@@ -97,34 +104,6 @@ fun AnimeDetailsContent(
                         .height(300.dp),
                     contentScale = ContentScale.Crop
                 )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Button(onClick = {
-/*
-                        navController.navigate("screen1")
-*/
-                        currentScreen= Screen.Screen1
-                    }) {
-                        Text("Экран 1")
-                    }
-
-                    Button(onClick = {
-/*
-                        navController.navigate("screen2")
-*/
-                        currentScreen= Screen.Screen2
-                    }) {
-                        Text("Экран 2")
-                    }
-                }
-
 
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -163,34 +142,31 @@ fun AnimeDetailsContent(
                     Text("Смотреть")
                 }
 
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(onClick = {
+                        currentScreen= Screen.Screen1
+                    }) {
+                        Text("Экран 1")
+                    }
+
+                    Button(onClick = {
+                        currentScreen= Screen.Screen2
+                    }) {
+                        Text("Экран 2")
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(20.dp))
 
-
-
                 // Описание
-                BottomContentSection(currentScreen,anime)
-
-
-
-                /*Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-
-                ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = "screen1",
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        composable("screen1") {
-                            AnimeDownInfo(anime)
-                        }
-                        composable("screen2") {
-
-                        }
-                    }
-                }*/
-
+                BottomContentSection(currentScreen,anime,characters)
             }
 
         }
@@ -238,30 +214,16 @@ fun AnimeDownInfo(anime: AnimeDetailModel){
     }
     }
 
-@Composable
-fun AnimeDownCharacters(){
-
-}
 
 @Composable
-fun AnimeDownVideos(){
-
-}
-
-@Composable
-fun AnimeDownNews(){
-
-}
-
-@Composable
-fun BottomContentSection(screen: Screen,anime: AnimeDetailModel) {
+fun BottomContentSection(screen: Screen,anime: AnimeDetailModel,characters: List<CharacterItemModel>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         when (screen) {
             Screen.Screen1 -> AnimeDownInfo(anime)
-            Screen.Screen2 -> AnimeDownNews()
+            Screen.Screen2 -> AnimeCharactersContetnt(characters)
         }
     }
 }
