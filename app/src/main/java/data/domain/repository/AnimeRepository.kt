@@ -8,6 +8,7 @@ import data.domain.model.server.AnimeResponseModel
 import data.domain.model.server.CharactersResponseModel
 import data.domain.model.server.EpisodeDetailResponseModel
 import data.domain.model.server.StreamingResponseModel
+import kotlinx.coroutines.flow.Flow
 
 
 interface AnimeRepository {
@@ -21,10 +22,12 @@ interface AnimeRepository {
 
 
 
-     suspend fun getAllAnime(): Result<List<FavoriteAnimeModel>>
-     suspend fun insertAnime(anime: FavoriteAnimeModel): Result<Unit>
-     suspend fun deleteAnime(anime: FavoriteAnimeModel): Result<Unit>
-     suspend fun isFavorite(anime: FavoriteAnimeModel): Result<Boolean>
+     fun getAllAnime(): Flow<List<FavoriteAnimeModel>>
+     suspend fun insertAnime(anime: FavoriteAnimeModel): Unit
+     suspend fun deleteAnime(anime: FavoriteAnimeModel): Unit
+     suspend fun isFavorite(anime: FavoriteAnimeModel): Boolean
+
+     fun searchAnime(query: String): Flow<List<FavoriteAnimeModel>>
 
 }
 

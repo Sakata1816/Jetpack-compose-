@@ -23,6 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,13 +34,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import data.domain.model.local.FavoriteAnimeModel
 import data.domain.model.server.AnimeDetailModel
 import data.navigation.NavRoute
+import data.screens.components.AnimeStatus
+import data.screens.components.StatusDropdown
+import data.viewModel.local.FavouriteAnimeViewModel
 import data.viewModel.server.AnimeListViewModel
 
 
 @Composable
-fun AnimeListScreen(navController: NavController,viewModel: AnimeListViewModel = hiltViewModel()) {
+fun AnimeListScreen(navController: NavController,
+                    viewModel: AnimeListViewModel = hiltViewModel(),
+                    localViewModel: FavouriteAnimeViewModel=hiltViewModel()) {
 
     val state by viewModel.state.collectAsState()
     val listState = rememberLazyListState()
@@ -66,12 +75,48 @@ fun AnimeListScreen(navController: NavController,viewModel: AnimeListViewModel =
             LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
 
                 items(state.anime) { anime ->
-                    Anime(anime=anime,
-                        onClick = {id->
+                    var status by remember { mutableStateOf(AnimeStatus.NONE) }
+
+                    LaunchedEffect(anime.id) {
+                        val isFav = localViewModel.isFavorite(FavoriteAnimeModel(
+                            mal_id = anime.id,
+                            title = anime.title,
+                            imageUrl = anime.images?.jpg?.imageUrl,
+                            score = anime.score
+                        ))
+                        status = if (isFav) AnimeStatus.COMPLETED else AnimeStatus.NONE
+                    }
+                    Anime(
+                        anime = anime,
+                        currentStatus = status,
+                        onClick = { id ->
                             navController.navigate(
                                 NavRoute.AnimeDetails.createRoute(id)
                             )
-                        })
+                        },
+                        onStatusSelected = { selectedStatus ->
+
+                            status = selectedStatus
+
+                            if (selectedStatus == AnimeStatus.NONE) {
+                                localViewModel.deleteAnime(FavoriteAnimeModel(
+                                    mal_id = anime.id,
+                                    title = anime.title,
+                                    imageUrl = anime.images?.jpg?.imageUrl,
+                                    score = anime.score
+                                ))
+                            } else {
+                                localViewModel.insertAnime(
+                                    FavoriteAnimeModel(
+                                        mal_id = anime.id,
+                                        title = anime.title,
+                                        imageUrl = anime.images?.jpg?.imageUrl,
+                                        score = anime.score
+                                    )
+                                )
+                            }
+                        }
+                    )
                 }
 
                 item {
@@ -113,7 +158,12 @@ fun AnimeListScreen(navController: NavController,viewModel: AnimeListViewModel =
 
 
 @Composable
-fun Anime(anime: AnimeDetailModel,onClick:(Int)-> Unit){
+fun Anime(
+    anime: AnimeDetailModel,
+    currentStatus: AnimeStatus,
+    onClick: (Int) -> Unit,
+    onStatusSelected: (AnimeStatus) -> Unit
+){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,6 +182,10 @@ fun Anime(anime: AnimeDetailModel,onClick:(Int)-> Unit){
         Text(
             text = anime.title,
             style = MaterialTheme.typography.titleMedium
+        )
+        StatusDropdown(
+            currentStatus = currentStatus,
+            onStatusSelected = onStatusSelected
         )
     }
 

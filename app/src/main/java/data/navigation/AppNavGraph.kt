@@ -11,6 +11,8 @@ import data.screens.AnimeDetailsScreen
 import data.screens.AnimeEpisodesList
 import data.screens.AnimeListScreen
 import data.screens.EpisodeDigit
+import data.screens.FavouriteAnime
+import data.screens.FavouriteAnimeScreen
 
 
 @Composable
@@ -38,7 +40,7 @@ fun AppNavGraph(navController: NavHostController,modifier: Modifier) {
         }
 
         composable(NavRoute.FavouriteAnime.route){
-
+            FavouriteAnimeScreen(navController)
         }
 
         composable(NavRoute.Settings.route){

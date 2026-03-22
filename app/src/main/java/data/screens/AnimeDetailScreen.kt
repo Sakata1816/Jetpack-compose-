@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -43,12 +46,11 @@ fun AnimeDetailsScreen(
     animeId: Int?,
     navController: NavController,
     viewModel: AnimeDetailViewModel = hiltViewModel(),
-    viewModelChar: AnimeCharactersViewModel=hiltViewModel()
 ) {
 
     LaunchedEffect(animeId) {
         viewModel.loadAnime(animeId?:0)
-        viewModelChar.loadCharacters(animeId?:0)
+        viewModel.loadCharacters(animeId?:0)
     }
 
     val state by viewModel.state.collectAsState()
@@ -83,7 +85,7 @@ fun AnimeDetailsContent(
     characters: List<CharacterItemModel>,
     onClick:(Int)-> Unit
 ) {
-    var currentScreen by remember { mutableStateOf(Screen.Screen1) }
+    var currentScreen by remember { mutableStateOf(Screen.Description) }
 
 
     LazyColumn(
@@ -151,27 +153,51 @@ fun AnimeDetailsContent(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(onClick = {
-                        currentScreen= Screen.Screen1
+                        currentScreen= Screen.Description
                     }) {
-                        Text("Экран 1")
+                        Text("Info")
                     }
 
                     Button(onClick = {
-                        currentScreen= Screen.Screen2
+                        currentScreen= Screen.Characters
                     }) {
-                        Text("Экран 2")
+                        Text("Characters")
                     }
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-
-                // Описание
-                BottomContentSection(currentScreen,anime,characters)
             }
 
+            }
+        when (currentScreen) {
+            Screen.Description -> {
+                item {
+                    AnimeDownInfo(anime)
+                }
+            }
+            Screen.Characters -> {
+                items(characters) { character ->
+                    Row(){
+                        AsyncImage(
+                            model = character.images?.jpg ?.image_url ?: character.images?.webp?.image_url,
+                            contentDescription = "AnimeChatactersImage",
+                            modifier = Modifier.size(120.dp),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column() {
+                            Text(text = character.name)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(text = character.role)
+                        }
+                    }
+                }
+            }
+        }
         }
     }
-}
+
 
 
 
@@ -215,7 +241,7 @@ fun AnimeDownInfo(anime: AnimeDetailModel){
     }
 
 
-@Composable
+/*@Composable
 fun BottomContentSection(screen: Screen,anime: AnimeDetailModel,characters: List<CharacterItemModel>) {
     Box(
         modifier = Modifier
@@ -226,8 +252,8 @@ fun BottomContentSection(screen: Screen,anime: AnimeDetailModel,characters: List
             Screen.Screen2 -> AnimeCharactersContetnt(characters)
         }
     }
-}
+}*/
 
 enum class Screen {
-    Screen1, Screen2
+    Description, Characters
 }
