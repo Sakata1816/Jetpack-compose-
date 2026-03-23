@@ -1,5 +1,6 @@
 package data.domain.repository
 
+import androidx.room.Query
 import data.domain.model.local.FavoriteAnimeModel
 import data.domain.model.server.AnimeDetailResponseModel
 import data.domain.model.server.AnimeEpisodesModel
@@ -8,6 +9,7 @@ import data.domain.model.server.AnimeResponseModel
 import data.domain.model.server.CharactersResponseModel
 import data.domain.model.server.EpisodeDetailResponseModel
 import data.domain.model.server.StreamingResponseModel
+import data.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.Flow
 
 
@@ -23,12 +25,21 @@ interface AnimeRepository {
 
 
      fun getAllAnime(): Flow<List<FavoriteAnimeModel>>
+
      suspend fun insertAnime(anime: FavoriteAnimeModel): Unit
-     suspend fun deleteAnime(anime: FavoriteAnimeModel): Unit
-     suspend fun isFavorite(anime: FavoriteAnimeModel): Boolean
+
+     suspend fun deleteAnime(id: Int): Unit
+
+     suspend fun isFavorite(id: Int): Boolean
 
      fun searchAnime(query: String): Flow<List<FavoriteAnimeModel>>
 
+     suspend fun updateAnimeStatus(
+          anime: FavoriteAnimeModel,
+          status: AnimeStatus
+     )
+
+     fun getAnimeByStatus(status: AnimeStatus): Flow<List<FavoriteAnimeModel>>
 }
 
 

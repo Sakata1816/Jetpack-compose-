@@ -9,7 +9,8 @@ fun FavoriteAnimeEntity.toDomain(): FavoriteAnimeModel {
         mal_id = mal_id,
         title = title,
         imageUrl = imageUrl ,
-        score = score
+        score = score,
+        status=status
     )
 }
 
@@ -18,6 +19,7 @@ fun FavoriteAnimeModel.toEntity(): FavoriteAnimeEntity {
         mal_id = mal_id,
         title = title,
         imageUrl = imageUrl,
-        score = score
+        score = score,
+        status=status
     )
 }

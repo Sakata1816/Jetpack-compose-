@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
@@ -28,13 +29,15 @@ enum class AnimeStatus(val title: String, val color: Color) {
     PLAN("В планах", Color.LightGray),
     WATCHING("Смотрю", Color.Blue),
     DROPPED("Брошено", Color.Red),
-    COMPLETED("Просмотрено", Color.Green)
+    COMPLETED("Просмотрено", Color.Green),
+    DELETED("Удалить из списка", Color.Red)
 }
 
 @Composable
 fun StatusDropdown(
     currentStatus: AnimeStatus,
-    onStatusSelected: (AnimeStatus) -> Unit
+    onStatusSelected: (AnimeStatus) -> Unit,
+    onDelete: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -78,6 +81,21 @@ fun StatusDropdown(
                     }
                 )
             }
+
+            Divider()
+
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        "Удалить из списка",
+                        color = Color.Red
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onDelete()
+                }
+            )
         }
     }
 }

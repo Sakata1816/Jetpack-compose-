@@ -21,6 +21,7 @@ import data.domain.repository.AnimeRepository
 import data.mapper.animeLocalMapper.toDomain
 import data.mapper.animeLocalMapper.toEntity
 import data.mapper.animeServerMapper.toModel
+import data.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.w3c.dom.NameList
@@ -86,12 +87,31 @@ class AnimeRepositoryImpl @Inject constructor(
             local.insertAnime(anime.toEntity())
 
 
-    override suspend fun deleteAnime(anime: FavoriteAnimeModel): Unit =
-            local.deleteAnime(anime.toEntity())
+    override suspend fun deleteAnime(id: Int): Unit =
+            local.deleteAnime(id)
 
 
-    override suspend fun isFavorite(anime: FavoriteAnimeModel): Boolean =
-            local.isFavorite(anime.toEntity())
+    override suspend fun isFavorite(id: Int): Boolean =
+            local.isFavorite(id)
+
+
+    override suspend fun updateAnimeStatus(
+        anime: FavoriteAnimeModel,
+        status: AnimeStatus
+    ) {
+        if (status == AnimeStatus.NONE || status == AnimeStatus.DELETED) {
+            local.deleteAnime(anime.mal_id)
+        } else {
+            local.insertAnime(
+                anime.copy(status = status).toEntity()
+            )
+        }
+    }
+
+    override fun getAnimeByStatus(status: AnimeStatus): Flow<List<FavoriteAnimeModel>> =
+        local.getAnimeByStatus(status).map { list ->
+            list.map { it.toDomain() }
+        }
 
 
 

@@ -79,10 +79,7 @@ fun AnimeListScreen(navController: NavController,
 
                     LaunchedEffect(anime.id) {
                         val isFav = localViewModel.isFavorite(FavoriteAnimeModel(
-                            mal_id = anime.id,
-                            title = anime.title,
-                            imageUrl = anime.images?.jpg?.imageUrl,
-                            score = anime.score
+
                         ))
                         status = if (isFav) AnimeStatus.COMPLETED else AnimeStatus.NONE
                     }
