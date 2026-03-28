@@ -10,5 +10,5 @@ data class FavoriteAnimeEntity(
     val title: String,
     val imageUrl: String?,
     val score: Double?,
-    val status: AnimeStatus
+    val status: AnimeStatus = AnimeStatus.NONE
 )

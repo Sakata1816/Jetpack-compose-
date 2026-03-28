@@ -36,20 +36,27 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import data.domain.model.local.FavoriteAnimeModel
 import data.domain.model.server.AnimeDetailModel
+import data.mapper.animeLocalMapper.toLocal
 import data.navigation.NavRoute
 import data.screens.components.AnimeStatus
 import data.screens.components.StatusDropdown
 import data.viewModel.local.FavouriteAnimeViewModel
+import data.viewModel.local.FavouriteAnimeViewModel1
 import data.viewModel.server.AnimeListViewModel
 
 
 @Composable
 fun AnimeListScreen(navController: NavController,
                     viewModel: AnimeListViewModel = hiltViewModel(),
-                    localViewModel: FavouriteAnimeViewModel=hiltViewModel()) {
+                    localViewModel: FavouriteAnimeViewModel1=hiltViewModel()
+) {
 
     val state by viewModel.state.collectAsState()
     val listState = rememberLazyListState()
+    val favorites by localViewModel.favorites.collectAsState(initial = emptyList())
+    val favoriteMap = remember(favorites) {
+        favorites.associateBy { it.mal_id }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column() {
@@ -75,14 +82,9 @@ fun AnimeListScreen(navController: NavController,
             LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
 
                 items(state.anime) { anime ->
-                    var status by remember { mutableStateOf(AnimeStatus.NONE) }
 
-                    LaunchedEffect(anime.id) {
-                        val isFav = localViewModel.isFavorite(FavoriteAnimeModel(
+                    val status = favoriteMap[anime.id]?.status ?: AnimeStatus.NONE
 
-                        ))
-                        status = if (isFav) AnimeStatus.COMPLETED else AnimeStatus.NONE
-                    }
                     Anime(
                         anime = anime,
                         currentStatus = status,
@@ -91,27 +93,11 @@ fun AnimeListScreen(navController: NavController,
                                 NavRoute.AnimeDetails.createRoute(id)
                             )
                         },
-                        onStatusSelected = { selectedStatus ->
-
-                            status = selectedStatus
-
-                            if (selectedStatus == AnimeStatus.NONE) {
-                                localViewModel.deleteAnime(FavoriteAnimeModel(
-                                    mal_id = anime.id,
-                                    title = anime.title,
-                                    imageUrl = anime.images?.jpg?.imageUrl,
-                                    score = anime.score
-                                ))
-                            } else {
-                                localViewModel.insertAnime(
-                                    FavoriteAnimeModel(
-                                        mal_id = anime.id,
-                                        title = anime.title,
-                                        imageUrl = anime.images?.jpg?.imageUrl,
-                                        score = anime.score
-                                    )
-                                )
-                            }
+                        onStatusChange = { newStatus ->
+                            localViewModel.changeStatus(
+                                anime = anime.toLocal(status), // или маппер
+                                status = newStatus
+                            )
                         }
                     )
                 }
@@ -159,7 +145,8 @@ fun Anime(
     anime: AnimeDetailModel,
     currentStatus: AnimeStatus,
     onClick: (Int) -> Unit,
-    onStatusSelected: (AnimeStatus) -> Unit
+    onStatusChange: (AnimeStatus) -> Unit
+
 ){
     Row(
         modifier = Modifier
@@ -178,11 +165,15 @@ fun Anime(
 
         Text(
             text = anime.title,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.weight(1f)
         )
+
         StatusDropdown(
             currentStatus = currentStatus,
-            onStatusSelected = onStatusSelected
+            onStatusSelected = { status ->
+                onStatusChange(status)
+            }
         )
     }
 

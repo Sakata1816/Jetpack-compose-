@@ -9,7 +9,7 @@ import javax.inject.Inject
 //это по сути источник локальных данных, не более, тут не бывает сложной логики
 
 class UserLocalDataSource  @Inject constructor(private val dao: FavoriteAnimeDao) {
-    fun getAllAnime() = dao.getAll()
+    fun getAllAnime(query: String) = dao.searchAnime(query)
     suspend fun insertAnime(anime: FavoriteAnimeEntity) = dao.insertAnime(anime)
     suspend fun deleteAnime(id: Int) = dao.deleteAnime(id)
     suspend fun isFavorite  (id:Int) = dao.isFavorite(id)

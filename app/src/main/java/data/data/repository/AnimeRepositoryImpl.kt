@@ -35,7 +35,7 @@ class AnimeRepositoryImpl @Inject constructor(
 
     // ---------------- SERVER ----------------
 
-    override suspend fun getAllAnimeList(page: Int,name: String?): Result<AnimeResponseModel> =
+    override suspend fun getAllAnimeList(page: Int,name: String): Result<AnimeResponseModel> =
         runCatching {
             api.getAllAnime(page,name).toModel()
         }
@@ -73,15 +73,11 @@ class AnimeRepositoryImpl @Inject constructor(
 
     // ---------------- LOCAL ----------------
 
-    override fun getAllAnime(): Flow<List<FavoriteAnimeModel>> =
-        local.getAllAnime().map { list->
-            list.map { it.toDomain() }
-        }
-
-    override fun searchAnime(query: String): Flow<List<FavoriteAnimeModel>> =
+    override fun getAllAnime(query: String): Flow<List<FavoriteAnimeModel>> =
         local.searchAnime(query).map { list->
             list.map { it.toDomain() }
         }
+
 
     override suspend fun insertAnime(anime: FavoriteAnimeModel): Unit =
             local.insertAnime(anime.toEntity())
@@ -95,23 +91,16 @@ class AnimeRepositoryImpl @Inject constructor(
             local.isFavorite(id)
 
 
-    override suspend fun updateAnimeStatus(
-        anime: FavoriteAnimeModel,
-        status: AnimeStatus
-    ) {
-        if (status == AnimeStatus.NONE || status == AnimeStatus.DELETED) {
-            local.deleteAnime(anime.mal_id)
-        } else {
-            local.insertAnime(
-                anime.copy(status = status).toEntity()
-            )
-        }
-    }
-
     override fun getAnimeByStatus(status: AnimeStatus): Flow<List<FavoriteAnimeModel>> =
         local.getAnimeByStatus(status).map { list ->
             list.map { it.toDomain() }
         }
+
+    override fun searchAnime(query: String): Flow<List<FavoriteAnimeModel>> =
+        local.searchAnime(query).map { list->
+            list.map { it.toDomain() }
+        }
+
 
 
 

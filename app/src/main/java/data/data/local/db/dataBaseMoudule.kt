@@ -20,7 +20,9 @@ object DatabaseModule {
             app,
             AppDatabase::class.java,
             "app_db"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2) // 👈 ВОТ ТУТ
+            .build()
     }
 
     @Provides

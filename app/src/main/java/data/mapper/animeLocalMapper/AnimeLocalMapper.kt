@@ -2,6 +2,9 @@ package data.mapper.animeLocalMapper
 
 import data.data.local.entity.FavoriteAnimeEntity
 import data.domain.model.local.FavoriteAnimeModel
+import data.domain.model.server.AnimeDetailModel
+import data.domain.model.server.AnimeResponseModel
+import data.screens.components.AnimeStatus
 
 
 fun FavoriteAnimeEntity.toDomain(): FavoriteAnimeModel {
@@ -21,5 +24,15 @@ fun FavoriteAnimeModel.toEntity(): FavoriteAnimeEntity {
         imageUrl = imageUrl,
         score = score,
         status=status
+    )
+}
+
+fun AnimeDetailModel.toLocal(status: AnimeStatus): FavoriteAnimeModel {
+    return FavoriteAnimeModel(
+        mal_id = id,
+        title = title,
+        imageUrl = images?.jpg?.largeImageUrl,
+        score = score,
+        status = status
     )
 }

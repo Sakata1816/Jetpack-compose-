@@ -36,8 +36,7 @@ enum class AnimeStatus(val title: String, val color: Color) {
 @Composable
 fun StatusDropdown(
     currentStatus: AnimeStatus,
-    onStatusSelected: (AnimeStatus) -> Unit,
-    onDelete: () -> Unit
+    onStatusSelected: (AnimeStatus) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -50,10 +49,7 @@ fun StatusDropdown(
             )
         ) {
             Text(
-                if (currentStatus == AnimeStatus.NONE)
-                    "Добавить в"
-                else
-                    currentStatus.title
+                currentStatus.title
             )
         }
 
@@ -80,22 +76,10 @@ fun StatusDropdown(
                         onStatusSelected(status)
                     }
                 )
+                Divider()
             }
 
-            Divider()
 
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        "Удалить из списка",
-                        color = Color.Red
-                    )
-                },
-                onClick = {
-                    expanded = false
-                    onDelete()
-                }
-            )
         }
     }
 }

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface AnimeRepository {
-     suspend fun getAllAnimeList(page: Int,name: String?): Result<AnimeResponseModel>
+     suspend fun getAllAnimeList(page: Int,name: String): Result<AnimeResponseModel>
      suspend fun getAnimeFullInfo(id: Int): Result<AnimeFullModel>
      suspend fun getAnimeInfo(id: Int): Result<AnimeDetailResponseModel>
      suspend fun getAnimeCharacters(id: Int): Result<CharactersResponseModel>
@@ -24,7 +24,7 @@ interface AnimeRepository {
 
 
 
-     fun getAllAnime(): Flow<List<FavoriteAnimeModel>>
+     fun getAllAnime(query: String): Flow<List<FavoriteAnimeModel>>
 
      suspend fun insertAnime(anime: FavoriteAnimeModel): Unit
 
@@ -33,11 +33,6 @@ interface AnimeRepository {
      suspend fun isFavorite(id: Int): Boolean
 
      fun searchAnime(query: String): Flow<List<FavoriteAnimeModel>>
-
-     suspend fun updateAnimeStatus(
-          anime: FavoriteAnimeModel,
-          status: AnimeStatus
-     )
 
      fun getAnimeByStatus(status: AnimeStatus): Flow<List<FavoriteAnimeModel>>
 }
