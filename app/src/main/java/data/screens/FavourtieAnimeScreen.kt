@@ -1,12 +1,14 @@
 package data.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,7 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +43,8 @@ import data.navigation.NavRoute
 import data.screens.components.AnimeStatus
 import data.screens.components.StatusDropdown
 import data.viewModel.local.FavouriteAnimeViewModel
-import data.viewModel.local.FavouriteAnimeViewModel1
 import data.viewModel.server.AnimeListViewModel
+import kotlinx.coroutines.flow.compose
 import java.util.Collections.emptyList
 import java.util.Collections.list
 
@@ -48,15 +52,14 @@ import java.util.Collections.list
 @Composable
 fun FavouriteAnimeScreen(
     navController: NavController,
-    viewModel: FavouriteAnimeViewModel1 = hiltViewModel()
+    viewModel: FavouriteAnimeViewModel = hiltViewModel()
 ) {
 
 
+    var currentScreen by remember { mutableStateOf(FavScreen.Planned) }
+
     val searchQuery by viewModel.searchQuery.collectAsState()
     val list by viewModel.getFavourite.collectAsState(initial = kotlin.collections.emptyList())
-    val favoriteMap = remember(list) {
-        list.associateBy { it.mal_id }
-    }
 
     val listState = rememberLazyListState()
 
@@ -75,6 +78,42 @@ fun FavouriteAnimeScreen(
                 placeholder = { Text("Search favorite anime") },
                 singleLine = true
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = {
+                    currentScreen= FavScreen.Watching
+                    viewModel.onStatusFilterChange(AnimeStatus.WATCHING)
+                }) {
+                    Text("Watching")
+                }
+
+                Button(onClick = {
+                    currentScreen= FavScreen.Completed
+                    viewModel.onStatusFilterChange(AnimeStatus.COMPLETED)
+
+                }) {
+                    Text("Completed")
+                }
+                Button(onClick = {
+                    currentScreen= FavScreen.Dropped
+                    viewModel.onStatusFilterChange(AnimeStatus.DROPPED)
+                }) {
+                    Text("Dropped")
+                }
+                Button(onClick = {
+                    currentScreen= FavScreen.Planned
+                    viewModel.onStatusFilterChange(AnimeStatus.PLAN)
+                }) {
+                    Text("Planned")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // 📋 LIST
             LazyColumn(
@@ -106,8 +145,11 @@ fun FavouriteAnimeScreen(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
+        }
+
+
     }
-}
+
 
 
 @Composable
@@ -145,4 +187,18 @@ fun FavouriteAnime(anime: FavoriteAnimeModel,
         )
     }
 
+}
+
+enum class FavScreen {
+Planned ,Watching ,Dropped ,Completed
+}
+
+
+fun FavScreen.toStatus(): AnimeStatus {
+    return when (this) {
+        FavScreen.Planned -> AnimeStatus.PLAN
+        FavScreen.Watching -> AnimeStatus.WATCHING
+        FavScreen.Completed -> AnimeStatus.COMPLETED
+        FavScreen.Dropped -> AnimeStatus.DROPPED
+    }
 }

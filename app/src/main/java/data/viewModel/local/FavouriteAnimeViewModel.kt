@@ -1,75 +1,85 @@
 package data.viewModel.local
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Path.Companion.combine
-import data.domain.model.local.FavoriteAnimeModel
-import data.domain.repository.AnimeRepository
-import data.domain.state.local.FavouriteAnimeUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import data.data.repository.AnimeRepositoryImpl
-import data.data.repository.AnimeRepositoryImpl_Factory
+import data.domain.model.local.FavoriteAnimeModel
 import data.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class FavouriteAnimeViewModel @Inject constructor(val repository: AnimeRepositoryImpl): ViewModel() {
+class FavouriteAnimeViewModel @Inject constructor(
+    private val repository: AnimeRepositoryImpl
+) : ViewModel() {
 
-    private val _state= MutableStateFlow(FavouriteAnimeUiState())
-    val state: StateFlow<FavouriteAnimeUiState> = _state.asStateFlow()
+    // 🔍 поиск
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
 
-    fun loadFav(){
-        val uiState=state.value
+    // 🎯 фильтр по статусу
+    private val _statusFilter = MutableStateFlow<AnimeStatus?>(AnimeStatus.WATCHING)
+    val statusFilter = _statusFilter.asStateFlow()
+
+    val favorites = repository.getAllAnime("")
+
+
+    // 📦 главный поток списка
+    val getFavourite = combine(
+        repository.getAllAnime(""), // 👈 Flow<List<Anime>>
+        _searchQuery,
+        _statusFilter
+    ) { list, query, status ->
+
+        list.filter { anime ->
+
+            val matchesStatus =
+                status == null || anime.status == status
+
+            val matchesQuery =
+                query.isBlank() || anime.title.contains(query, ignoreCase = true)
+
+            matchesStatus && matchesQuery
+        }
+
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList()
+    )
+
+
+
+    fun onSearchChange(query: String) {
+        _searchQuery.value = query
+    }
+
+    fun onStatusFilterChange(status: AnimeStatus?) {
+        _statusFilter.value = status
+    }
+
+    // 🔥 обновление статуса
+
+
+    fun changeStatus(
+        anime: FavoriteAnimeModel,
+        status: AnimeStatus
+    ) {
         viewModelScope.launch {
-            repository.getAllAnime(uiState.searchQuery).collect {list->
-                _state.update { it.copy(users = list) }
+            if (status == AnimeStatus.NONE || status == AnimeStatus.DELETED) {
+                repository.deleteAnime(anime.mal_id)
+            } else {
+                repository.insertAnime(
+                    anime.copy(status = status)
+                )
             }
-
-        }
-
-    }
-
-    fun onSearchChange(query: String){
-        _state.update { it.copy(
-            searchQuery = query
-        ) }
-    }
-
-
-
-
-    // добавить
-    fun insertAnime(anime: FavoriteAnimeModel) {
-        viewModelScope.launch {
-            repository.insertAnime(anime)
         }
     }
-
-    // удалить
-    fun deleteAnime(id: Int) {
-        viewModelScope.launch {
-            repository.deleteAnime(id)
-        }
-    }
-
-    // проверить (если нужно)
-    suspend fun isFavorite(id: Int): Boolean {
-        return repository.isFavorite(id)
-    }
-
-
 }

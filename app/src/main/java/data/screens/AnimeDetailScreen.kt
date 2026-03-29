@@ -85,7 +85,7 @@ fun AnimeDetailsContent(
     characters: List<CharacterItemModel>,
     onClick:(Int)-> Unit
 ) {
-    var currentScreen by remember { mutableStateOf(Screen.Description) }
+    var currentScreen by remember { mutableStateOf(DetScreen.Description) }
 
 
     LazyColumn(
@@ -153,13 +153,13 @@ fun AnimeDetailsContent(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(onClick = {
-                        currentScreen= Screen.Description
+                        currentScreen= DetScreen.Description
                     }) {
                         Text("Info")
                     }
 
                     Button(onClick = {
-                        currentScreen= Screen.Characters
+                        currentScreen= DetScreen.Characters
                     }) {
                         Text("Characters")
                     }
@@ -170,12 +170,12 @@ fun AnimeDetailsContent(
 
             }
         when (currentScreen) {
-            Screen.Description -> {
+            DetScreen.Description -> {
                 item {
                     AnimeDownInfo(anime)
                 }
             }
-            Screen.Characters -> {
+            DetScreen.Characters -> {
                 items(characters) { character ->
                     Row(){
                         AsyncImage(
@@ -254,6 +254,6 @@ fun BottomContentSection(screen: Screen,anime: AnimeDetailModel,characters: List
     }
 }*/
 
-enum class Screen {
+enum class DetScreen {
     Description, Characters
 }

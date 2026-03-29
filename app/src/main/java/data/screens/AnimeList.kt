@@ -41,14 +41,13 @@ import data.navigation.NavRoute
 import data.screens.components.AnimeStatus
 import data.screens.components.StatusDropdown
 import data.viewModel.local.FavouriteAnimeViewModel
-import data.viewModel.local.FavouriteAnimeViewModel1
 import data.viewModel.server.AnimeListViewModel
 
 
 @Composable
 fun AnimeListScreen(navController: NavController,
                     viewModel: AnimeListViewModel = hiltViewModel(),
-                    localViewModel: FavouriteAnimeViewModel1=hiltViewModel()
+                    localViewModel: FavouriteAnimeViewModel=hiltViewModel()
 ) {
 
     val state by viewModel.state.collectAsState()
