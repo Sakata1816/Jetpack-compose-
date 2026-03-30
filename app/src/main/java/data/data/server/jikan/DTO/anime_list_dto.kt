@@ -1,4 +1,4 @@
-package data.data.server.DTO
+package data.data.server.jikan.DTO
 
 data class AnimeResponse(
     val pagination: PaginationAnimeDto,

@@ -52,6 +52,7 @@ android {
     }
 }
 
+
 dependencies {
     val roomVersion = "2.6.1"
 
@@ -93,4 +94,9 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    // Firebase BOM совместимая с Kotlin 1.9
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
 }

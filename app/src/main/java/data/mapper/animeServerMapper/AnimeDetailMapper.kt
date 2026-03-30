@@ -1,7 +1,7 @@
 package data.mapper.animeServerMapper
 
-import data.data.server.DTO.AnimeDetailDto
-import data.data.server.DTO.AnimeDetailResponse
+import data.data.server.jikan.DTO.AnimeDetailDto
+import data.data.server.jikan.DTO.AnimeDetailResponse
 import data.domain.model.server.AnimeDetailModel
 import data.domain.model.server.AnimeDetailResponseModel
 

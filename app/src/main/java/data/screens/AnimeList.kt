@@ -173,6 +173,7 @@ fun Anime(
             onStatusSelected = { status ->
                 onStatusChange(status)
             }
+
         )
     }
 

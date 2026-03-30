@@ -1,6 +1,6 @@
 package data.data.source
 
-import data.data.server.Api.JikanApi
+import data.data.server.jikan.Api.JikanApi
 import javax.inject.Inject
 
 class UserServerDataSource @Inject constructor(private val api: JikanApi) {

@@ -1,6 +1,6 @@
-package data.data.server.DI
+package data.data.server.jikan.DI
 
-import data.data.server.Api.JikanApi
+import data.data.server.jikan.Api.JikanApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

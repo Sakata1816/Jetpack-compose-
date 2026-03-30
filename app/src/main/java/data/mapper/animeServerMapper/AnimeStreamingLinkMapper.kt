@@ -1,7 +1,7 @@
 package data.mapper.animeServerMapper
 
-import data.data.server.DTO.StreamingLinkDto
-import data.data.server.DTO.StreamingResponse
+import data.data.server.jikan.DTO.StreamingLinkDto
+import data.data.server.jikan.DTO.StreamingResponse
 import data.domain.model.server.StreamingLinkModel
 import data.domain.model.server.StreamingResponseModel
 

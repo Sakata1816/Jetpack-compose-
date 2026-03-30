@@ -1,10 +1,10 @@
 package data.mapper.animeServerMapper
 
-import data.data.server.DTO.AnimeCharactersResponse
-import data.data.server.DTO.CharacterImagesDto
-import data.data.server.DTO.CharacterItemDto
-import data.data.server.DTO.CharacterJpgDto
-import data.data.server.DTO.CharacterWebpDto
+import data.data.server.jikan.DTO.AnimeCharactersResponse
+import data.data.server.jikan.DTO.CharacterImagesDto
+import data.data.server.jikan.DTO.CharacterItemDto
+import data.data.server.jikan.DTO.CharacterJpgDto
+import data.data.server.jikan.DTO.CharacterWebpDto
 import data.domain.model.server.CharacterImagesModel
 import data.domain.model.server.CharacterItemModel
 import data.domain.model.server.CharacterJpgModel

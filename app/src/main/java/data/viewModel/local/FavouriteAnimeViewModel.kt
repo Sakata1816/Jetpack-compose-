@@ -33,20 +33,16 @@ class FavouriteAnimeViewModel @Inject constructor(
 
     // 📦 главный поток списка
     val getFavourite = combine(
-        repository.getAllAnime(""), // 👈 Flow<List<Anime>>
         _searchQuery,
         _statusFilter
-    ) { list, query, status ->
+    ) { query, status ->
+        query to status
+    }.flatMapLatest { (query, status) ->
 
-        list.filter { anime ->
-
-            val matchesStatus =
-                status == null || anime.status == status
-
-            val matchesQuery =
-                query.isBlank() || anime.title.contains(query, ignoreCase = true)
-
-            matchesStatus && matchesQuery
+        when {
+            status != null -> repository.getAnimeByStatus(status)
+            query.isNotEmpty() -> repository.getAllAnime(query)
+            else -> repository.getAllAnime("")
         }
 
     }.stateIn(

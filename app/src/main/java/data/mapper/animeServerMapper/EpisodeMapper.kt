@@ -1,8 +1,8 @@
 package data.mapper.animeServerMapper
 
-import data.data.server.DTO.AnimeEpisodesResponse
-import data.data.server.DTO.EpisodeDto
-import data.data.server.DTO.PaginationDto
+import data.data.server.jikan.DTO.AnimeEpisodesResponse
+import data.data.server.jikan.DTO.EpisodeDto
+import data.data.server.jikan.DTO.PaginationDto
 import data.domain.model.server.AnimeEpisodesModel
 import data.domain.model.server.EpisodeModel
 import data.domain.model.server.PaginationModel

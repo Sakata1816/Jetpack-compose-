@@ -1,21 +1,14 @@
 package data.data.repository
 
-import data.data.local.entity.FavoriteAnimeEntity
-import data.data.server.Api.JikanApi
 import data.data.source.UserLocalDataSource
 import data.data.source.UserServerDataSource
 import data.domain.model.local.FavoriteAnimeModel
-import data.domain.model.server.AnimeDetailModel
 import data.domain.model.server.AnimeDetailResponseModel
 import data.domain.model.server.AnimeEpisodesModel
 import data.domain.model.server.AnimeFullModel
 import data.domain.model.server.AnimeResponseModel
-import data.domain.model.server.CharacterItemModel
 import data.domain.model.server.CharactersResponseModel
-import data.domain.model.server.EpisodeDetailModel
 import data.domain.model.server.EpisodeDetailResponseModel
-import data.domain.model.server.EpisodeModel
-import data.domain.model.server.StreamingLinkModel
 import data.domain.model.server.StreamingResponseModel
 import data.domain.repository.AnimeRepository
 import data.mapper.animeLocalMapper.toDomain
@@ -24,7 +17,6 @@ import data.mapper.animeServerMapper.toModel
 import data.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.w3c.dom.NameList
 import javax.inject.Inject
 
 
