@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "374730794911",
+    "project_id": "jikanauth",
+    "storage_bucket": "jikanauth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374730794911:android:580b875ad0659043ea3faa",
+        "android_client_info": {
+          "package_name": "com.example.data"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSQ97eTtHjZMyckjl05PyboItTNWRo1JE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374730794911:android:7f6687c2fcc47a82ea3faa",
+        "android_client_info": {
+          "package_name": "com.example.jetpackompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSQ97eTtHjZMyckjl05PyboItTNWRo1JE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.hilt)
     kotlin("kapt")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services") // <- вот это важно
+
 
 }
 
