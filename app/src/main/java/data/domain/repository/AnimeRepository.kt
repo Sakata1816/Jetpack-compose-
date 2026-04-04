@@ -1,6 +1,5 @@
 package data.domain.repository
 
-import androidx.room.Query
 import data.domain.model.local.FavoriteAnimeModel
 import data.domain.model.server.AnimeDetailResponseModel
 import data.domain.model.server.AnimeEpisodesModel
@@ -9,7 +8,7 @@ import data.domain.model.server.AnimeResponseModel
 import data.domain.model.server.CharactersResponseModel
 import data.domain.model.server.EpisodeDetailResponseModel
 import data.domain.model.server.StreamingResponseModel
-import data.screens.components.AnimeStatus
+import data.presentation.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.Flow
 
 

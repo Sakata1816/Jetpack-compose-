@@ -3,8 +3,7 @@ package data.mapper.animeLocalMapper
 import data.data.local.entity.FavoriteAnimeEntity
 import data.domain.model.local.FavoriteAnimeModel
 import data.domain.model.server.AnimeDetailModel
-import data.domain.model.server.AnimeResponseModel
-import data.screens.components.AnimeStatus
+import data.presentation.screens.components.AnimeStatus
 
 
 fun FavoriteAnimeEntity.toDomain(): FavoriteAnimeModel {

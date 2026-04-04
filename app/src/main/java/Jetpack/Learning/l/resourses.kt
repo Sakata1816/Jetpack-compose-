@@ -1,5 +1,6 @@
 package Jetpack.Learning.l
 
+/*
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -40,4 +41,4 @@ class MainActivity2: ComponentActivity() {
 
 
     }
-}
+}*/

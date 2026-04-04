@@ -14,7 +14,7 @@ import data.domain.repository.AnimeRepository
 import data.mapper.animeLocalMapper.toDomain
 import data.mapper.animeLocalMapper.toEntity
 import data.mapper.animeServerMapper.toModel
-import data.screens.components.AnimeStatus
+import data.presentation.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

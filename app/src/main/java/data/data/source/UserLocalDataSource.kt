@@ -2,7 +2,7 @@ package data.data.source
 
 import data.data.local.dao.FavoriteAnimeDao
 import data.data.local.entity.FavoriteAnimeEntity
-import data.screens.components.AnimeStatus
+import data.presentation.screens.components.AnimeStatus
 import javax.inject.Inject
 
 

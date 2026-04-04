@@ -2,20 +2,13 @@ package data.data.local.db
 
 import data.data.local.dao.FavoriteAnimeDao
 import data.data.local.entity.FavoriteAnimeEntity
-import android.app.Application
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import data.screens.components.AnimeStatus
-import javax.inject.Singleton
+import data.presentation.screens.components.AnimeStatus
 
 @Database(entities = [FavoriteAnimeEntity::class],
     version = 2,

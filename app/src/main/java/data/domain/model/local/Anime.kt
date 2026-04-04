@@ -1,6 +1,6 @@
 package data.domain.model.local
 
-import data.screens.components.AnimeStatus
+import data.presentation.screens.components.AnimeStatus
 
 data class FavoriteAnimeModel(
     val mal_id: Int,

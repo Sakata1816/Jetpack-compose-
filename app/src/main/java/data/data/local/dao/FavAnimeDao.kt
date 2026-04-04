@@ -2,11 +2,10 @@ package data.data.local.dao
 
 import data.data.local.entity.FavoriteAnimeEntity
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import data.screens.components.AnimeStatus
+import data.presentation.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao

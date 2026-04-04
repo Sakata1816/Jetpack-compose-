@@ -2,7 +2,7 @@ package data.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import data.screens.components.AnimeStatus
+import data.presentation.screens.components.AnimeStatus
 
 @Entity(tableName = "favorite_anime")
 data class FavoriteAnimeEntity(

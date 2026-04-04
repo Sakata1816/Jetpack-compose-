@@ -14,11 +14,11 @@ android {
     lint {
         baseline = file("lint-baseline.xml")
     }
-    namespace = "com.example.jetpackompose"
+    namespace = "com.example.animeapp"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.jetpackompose"
+        applicationId = "com.example.animeapp"
         minSdk = 30
         targetSdk = 36
         versionCode = 1
@@ -101,4 +101,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+    // Firestore
+    implementation ("com.google.firebase:firebase-firestore-ktx")
+// Kotlin Coroutines support для Firestore
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }
