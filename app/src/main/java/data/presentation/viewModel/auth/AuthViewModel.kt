@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import data.data.repository.AnimeAuthRepository
+import data.data.repository.ProfileRepositoryImpl
 import data.presentation.state.auth.AuthUiState
 import data.presentation.navigation.authRoot.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AnimeAuthRepository
+    private val repository: AnimeAuthRepository,
+    private val profileRepository: ProfileRepositoryImpl
 ) : ViewModel() {
 
     // UI состояние
@@ -24,13 +27,22 @@ class AuthViewModel @Inject constructor(
         private set
 
     // Глобальное состояние авторизации
-    private val _authState = MutableStateFlow<AuthState>(
-        if (repository.getCurrentUser() != null)
-            AuthState.Authorized
-        else
-            AuthState.Unauthorized
-    )
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Authorized)
     val authState = _authState.asStateFlow()
+
+    private val auth = FirebaseAuth.getInstance()
+
+    init {
+        // Подписка на изменения состояния пользователя
+        auth.addAuthStateListener { firebaseAuth ->
+            _authState.value = if (firebaseAuth.currentUser != null) {
+                AuthState.Authorized
+            } else {
+                AuthState.Unauthorized
+            }
+        }
+
+    }
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
@@ -47,6 +59,7 @@ class AuthViewModel @Inject constructor(
             }
 
             if (result.isSuccess) {
+                val user=result.getOrNull()
                 _authState.value = AuthState.Authorized
             }
         }
@@ -58,19 +71,19 @@ class AuthViewModel @Inject constructor(
 
             val result = repository.register(email, password)
 
-            uiState = if (result.isSuccess) {
-                AuthUiState.Success
-            } else {
-                AuthUiState.Error(
-                    result.exceptionOrNull()?.message ?: "Ошибка"
-                )
-            }
-
             if (result.isSuccess) {
+                val user = result.getOrNull()!!
+                // Проверяем/создаём профиль
+                profileRepository.ensureUserProfile(user.uid, user.email ?: "")
+
                 _authState.value = AuthState.Authorized
+                uiState = AuthUiState.Success // или RequireProfileCreation если хочешь отдельный экран
+            } else {
+                uiState = AuthUiState.Error(result.exceptionOrNull()?.message ?: "Ошибка")
             }
         }
     }
+
 
     fun logout() {
         repository.logout()

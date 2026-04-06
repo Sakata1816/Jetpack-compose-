@@ -60,7 +60,7 @@ fun BottomBar(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate("Settings")
+                navController.navigate(NavRoute.Settings.route)
             },
             icon = { Icon(Icons.Default.Settings, null) },
             label = { Text("Settings") }

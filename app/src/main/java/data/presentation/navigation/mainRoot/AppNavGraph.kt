@@ -9,6 +9,8 @@ import data.presentation.screens.animeScreens.AnimeDetailsScreen
 import data.presentation.screens.animeScreens.AnimeEpisodesList
 import data.presentation.screens.animeScreens.AnimeListScreen
 import data.presentation.screens.animeScreens.FavouriteAnimeScreen
+import data.presentation.screens.profile.ProfileChangeScreen
+import data.presentation.screens.profile.ProfileScreen
 
 
 @Composable
@@ -40,7 +42,11 @@ fun AppNavGraph(navController: NavHostController,modifier: Modifier) {
         }
 
         composable(NavRoute.Settings.route){
+            ProfileScreen(navController)
+        }
 
+        composable(NavRoute.ChangeProfile.route){
+            ProfileChangeScreen(navController)
         }
     }
 }
