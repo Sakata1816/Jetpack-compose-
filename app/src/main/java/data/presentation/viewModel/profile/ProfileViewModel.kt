@@ -40,6 +40,7 @@ class ProfileViewModel @Inject constructor(
     val authState = _authState.asStateFlow()
 
 
+
     fun loadProfile() {
         val uid = authRepository.getCurrentUser()?.uid
 
@@ -75,11 +76,11 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateProfile(nickname: String, avatarUrl: String) {
+    fun updateProfile(username: String, avatarUrl: String) {
         val uid = authRepository.getCurrentUser()?.uid ?: return
         viewModelScope.launch {
             try {
-                repository.updateProfile(uid, nickname, avatarUrl)
+                repository.updateProfile(uid, username, avatarUrl)
                 uiState = ProfileUiState.Success
             } catch (e: Exception) {
                 uiState = ProfileUiState.Error(e.message ?: "Ошибка обновления профиля")

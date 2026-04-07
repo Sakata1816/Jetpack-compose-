@@ -16,9 +16,9 @@ class ProfileRepositoryImpl @Inject constructor(
     suspend fun createUser(profile: UserProfile) {
         dataSource.createUser(profile)
     }
-    suspend fun updateProfile(uid: String, nickname: String, avatarUrl: String) {
+    suspend fun updateProfile(uid: String, username: String, avatarUrl: String) {
         val updates = mapOf(
-            "nickname" to nickname,
+            "username" to username,
             "avatarUrl" to avatarUrl
         )
        dataSource.updateUser(uid, updates)

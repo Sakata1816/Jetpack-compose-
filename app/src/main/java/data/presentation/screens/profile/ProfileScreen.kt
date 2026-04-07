@@ -1,7 +1,10 @@
 package data.presentation.screens.profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,6 +43,7 @@ import data.presentation.state.auth.ProfileUiState
 import data.presentation.viewModel.auth.AuthViewModel
 import data.presentation.viewModel.profile.ProfileViewModel
 
+/*
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -147,9 +151,10 @@ fun ProfileScreen(
         }
     }
 }
+*/
 
 
-/*
+
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -165,10 +170,9 @@ fun ProfileScreen(
     }
 
     // Локальные состояния полей
-    val nickname by remember { derivedStateOf { profile?.username ?: "" } }
-    val email by remember { derivedStateOf { profile?.email ?: "" } }
-    val avatarUrl by remember { derivedStateOf { profile?.avatarUrl ?: "" } }
-
+    val nickname by remember(profile) { derivedStateOf { profile?.username ?: "" } }
+    val email by remember(profile) { derivedStateOf { profile?.email ?: "" } }
+    val avatarUrl by remember(profile) { derivedStateOf { profile?.avatarUrl ?: "" } }
     // Каркас экрана — не зависит от загрузки
     Column(
         modifier = Modifier
@@ -199,7 +203,7 @@ fun ProfileScreen(
                 ) {
                     Text(
                         nickname.firstOrNull()?.uppercase() ?: "U",
-                        color = Color.White,
+                        color = Color.Black,
                         fontSize = 32.sp
                     )
                 }
@@ -211,9 +215,8 @@ fun ProfileScreen(
             Text(
                 text = nickname,
                 fontSize = 20.sp,
+                color = Color.Black,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.background(Color.DarkGray)
-
             )
 
             Spacer(Modifier.height(4.dp))
@@ -221,8 +224,8 @@ fun ProfileScreen(
             // Email
             Text(
                 text = email,
-                color = Color.Gray,
-                modifier = Modifier.background(Color.DarkGray)
+                fontSize = 28.sp,
+                color = Color.Black
             )
 
             Spacer(Modifier.height(24.dp))
@@ -248,7 +251,7 @@ fun ProfileScreen(
         }
     }
 }
-*/
+
 
 @Composable
 fun ProfileChangeScreen(
@@ -261,7 +264,46 @@ fun ProfileChangeScreen(
     var nickname by remember { mutableStateOf(profile?.username ?: "") }
     var avatarUrl by remember { mutableStateOf(profile?.avatarUrl ?: "") }
 
+    // Лаунчер для выбора фото
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            avatarUrl = uri.toString() // локальный URI для временного отображения
+        }
+    }
+
     Column(modifier = Modifier.padding(all = 16.dp)) {
+
+        if (avatarUrl.isNotEmpty()) {
+            Image(
+                painter = rememberAsyncImagePainter(avatarUrl),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .clickable{launcher.launch("image/*")}
+
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+                    .clickable{launcher.launch("image/*")},
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    nickname.firstOrNull()?.uppercase() ?: "U",
+                    color = Color.Black,
+                    fontSize = 32.sp
+                )
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
         TextField(
             value = nickname,
             onValueChange = { nickname = it },
