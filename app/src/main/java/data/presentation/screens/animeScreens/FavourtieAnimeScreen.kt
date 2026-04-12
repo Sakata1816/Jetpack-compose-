@@ -35,20 +35,21 @@ import data.domain.model.local.FavoriteAnimeModel
 import data.presentation.navigation.mainRoot.NavRoute
 import data.presentation.screens.components.AnimeStatus
 import data.presentation.screens.components.StatusDropdown
-import data.presentation.viewModel.local.FavouriteAnimeViewModel
+import data.presentation.viewModel.profile.FavoriteAnimeViewModel
+import kotlin.collections.emptyList
 
 
 @Composable
 fun FavouriteAnimeScreen(
     navController: NavController,
-    viewModel: FavouriteAnimeViewModel = hiltViewModel()
+    viewModel: FavoriteAnimeViewModel = hiltViewModel()
 ) {
 
 
     var currentScreen by remember { mutableStateOf(FavScreen.Planned) }
 
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val list by viewModel.getFavourite.collectAsState(initial = emptyList())
+    val list by viewModel.getFavoritesStatus.collectAsState()
 
     val listState = rememberLazyListState()
 
@@ -60,7 +61,7 @@ fun FavouriteAnimeScreen(
             // 🔍 SEARCH
             OutlinedTextField(
                 value = searchQuery,
-                onValueChange = { viewModel.onSearchChange(it) },
+                onValueChange = { viewModel.setSearch(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -76,27 +77,27 @@ fun FavouriteAnimeScreen(
             ) {
                 Button(onClick = {
                     currentScreen= FavScreen.Watching
-                    viewModel.onStatusFilterChange(AnimeStatus.WATCHING)
+                    viewModel.setStatus(AnimeStatus.WATCHING)
                 }) {
                     Text("Watching")
                 }
 
                 Button(onClick = {
                     currentScreen= FavScreen.Completed
-                    viewModel.onStatusFilterChange(AnimeStatus.COMPLETED)
+                    viewModel.setStatus(AnimeStatus.COMPLETED)
 
                 }) {
                     Text("Completed")
                 }
                 Button(onClick = {
                     currentScreen= FavScreen.Dropped
-                    viewModel.onStatusFilterChange(AnimeStatus.DROPPED)
+                    viewModel.setStatus(AnimeStatus.DROPPED)
                 }) {
                     Text("Dropped")
                 }
                 Button(onClick = {
                     currentScreen= FavScreen.Planned
-                    viewModel.onStatusFilterChange(AnimeStatus.PLAN)
+                    viewModel.setStatus(AnimeStatus.PLAN)
                 }) {
                     Text("Planned")
                 }
@@ -142,7 +143,7 @@ fun FavouriteAnimeScreen(
 
 
 @Composable
-fun FavouriteAnime(anime: FavoriteAnimeModel,
+fun FavouriteAnime(anime: data.domain.model.profile.FavoriteAnimeModel,
                    onClick:(Int)-> Unit,
                    currentStatus: AnimeStatus,
                    onStatusChange: (AnimeStatus) -> Unit
@@ -183,6 +184,7 @@ Planned ,Watching ,Dropped ,Completed
 }
 
 
+/*
 fun FavScreen.toStatus(): AnimeStatus {
     return when (this) {
         FavScreen.Planned -> AnimeStatus.PLAN
@@ -191,3 +193,4 @@ fun FavScreen.toStatus(): AnimeStatus {
         FavScreen.Dropped -> AnimeStatus.DROPPED
     }
 }
+*/

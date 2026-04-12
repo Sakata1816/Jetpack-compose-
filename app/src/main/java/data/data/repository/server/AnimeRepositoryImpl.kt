@@ -1,7 +1,7 @@
-package data.data.repository
+package data.data.repository.server
 
-import data.data.source.UserLocalDataSource
-import data.data.source.UserServerDataSource
+import data.data.source.local.UserLocalDataSource
+import data.data.source.server.UserServerDataSource
 import data.domain.model.local.FavoriteAnimeModel
 import data.domain.model.server.AnimeDetailResponseModel
 import data.domain.model.server.AnimeEpisodesModel
@@ -18,7 +18,6 @@ import data.presentation.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-
 
 class AnimeRepositoryImpl @Inject constructor(
     private val api: UserServerDataSource,

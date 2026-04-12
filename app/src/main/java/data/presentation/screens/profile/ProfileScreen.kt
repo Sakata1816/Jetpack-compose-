@@ -1,5 +1,6 @@
 package data.presentation.screens.profile
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -258,32 +259,45 @@ fun ProfileChangeScreen(
     navController: NavController,
     viewModel: ProfileViewModel=hiltViewModel() // или отдельный ProfileViewModel
 ) {
+
     val profile = viewModel.profile
 
-    // Локальные состояния полей, заполняем текущими значениями
-    var nickname by remember { mutableStateOf(profile?.username ?: "") }
-    var avatarUrl by remember { mutableStateOf(profile?.avatarUrl ?: "") }
+    LaunchedEffect(Unit) {
+        viewModel.resetState()
+        viewModel.loadProfile()
+    }
+
+    // 👇 Используем side effect для навигации — key на isSaved
+    LaunchedEffect(viewModel.isSaved) {
+        if (viewModel.isSaved) {
+            viewModel.resetState() // сбрасываем ПЕРЕД навигацией
+            navController.popBackStack()
+        }
+    }
+
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var nickname by remember(profile) { mutableStateOf(profile?.username ?: "") }
 
     // Лаунчер для выбора фото
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         if (uri != null) {
-            avatarUrl = uri.toString() // локальный URI для временного отображения
+            selectedImageUri = uri   // 👈 только для превью
         }
     }
 
     Column(modifier = Modifier.padding(all = 16.dp)) {
+        val imageToShow = selectedImageUri ?: profile?.avatarUrl?.takeIf { it.isNotEmpty() }
 
-        if (avatarUrl.isNotEmpty()) {
+        if (imageToShow != null) {
             Image(
-                painter = rememberAsyncImagePainter(avatarUrl),
+                painter = rememberAsyncImagePainter(imageToShow),
                 contentDescription = null,
                 modifier = Modifier
                     .size(100.dp)
                     .clip(CircleShape)
                     .clickable{launcher.launch("image/*")}
-
             )
         } else {
             Box(
@@ -296,7 +310,7 @@ fun ProfileChangeScreen(
             ) {
                 Text(
                     nickname.firstOrNull()?.uppercase() ?: "U",
-                    color = Color.Black,
+                    color = Color.White,
                     fontSize = 32.sp
                 )
             }
@@ -312,11 +326,46 @@ fun ProfileChangeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            viewModel.updateProfile(nickname,avatarUrl)
-            navController.popBackStack()
-        }) {
-            Text("Сохранить профиль")
+
+        val uiState = viewModel.uiState
+        val isLoading = uiState is ProfileUiState.Loading
+
+
+        // Показываем ошибку если есть
+        if (uiState is ProfileUiState.Error) {
+            Text(
+                text = uiState.message,
+                color = Color.Red,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
         }
+
+        /*Button(onClick = {
+            selectedImageUri?.let { uri ->
+                viewModel.updateProfile(nickname,uri)
+            }
+        }
+        ) {
+            Text("Сохранить профиль")
+        }*/
+
+        Button(
+            onClick = {
+                // 👇 Сохраняем ВСЕГДА — даже если фото не менялось
+                viewModel.updateProfile(nickname, selectedImageUri)
+            },
+            enabled = !isLoading && nickname.isNotBlank()
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp,
+                    color = Color.White
+                )
+            } else {
+                Text("Сохранить профиль")
+            }
+        }
+
     }
 }

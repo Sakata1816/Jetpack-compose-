@@ -1,14 +1,13 @@
-package data.data.source
+package data.data.source.local
 
 import data.data.local.dao.FavoriteAnimeDao
 import data.data.local.entity.FavoriteAnimeEntity
 import data.presentation.screens.components.AnimeStatus
 import javax.inject.Inject
 
-
-//это по сути источник локальных данных, не более, тут не бывает сложной логики
-
-class UserLocalDataSource  @Inject constructor(private val dao: FavoriteAnimeDao) {
+class UserLocalDataSource  @Inject constructor(
+    private val dao: FavoriteAnimeDao
+) {
     fun getAllAnime(query: String) = dao.searchAnime(query)
     suspend fun insertAnime(anime: FavoriteAnimeEntity) = dao.insertAnime(anime)
     suspend fun deleteAnime(id: Int) = dao.deleteAnime(id)

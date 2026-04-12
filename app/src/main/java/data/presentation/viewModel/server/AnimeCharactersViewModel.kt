@@ -3,7 +3,7 @@ package data.presentation.viewModel.server
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import data.data.repository.AnimeRepositoryImpl
+import data.data.repository.server.AnimeRepositoryImpl
 import data.presentation.state.server.AnimeCharactersUiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow

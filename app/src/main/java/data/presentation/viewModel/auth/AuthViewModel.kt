@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import data.data.repository.AnimeAuthRepository
-import data.data.repository.ProfileRepositoryImpl
+import data.data.repository.auth.AnimeAuthRepository
+import data.data.repository.profile.ProfileRepositoryImpl
 import data.presentation.state.auth.AuthUiState
 import data.presentation.navigation.authRoot.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow

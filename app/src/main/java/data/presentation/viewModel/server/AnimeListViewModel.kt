@@ -1,6 +1,6 @@
 package data.presentation.viewModel.server
 
-import data.data.repository.AnimeRepositoryImpl
+import data.data.repository.server.AnimeRepositoryImpl
 import data.presentation.state.server.AnimeListUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

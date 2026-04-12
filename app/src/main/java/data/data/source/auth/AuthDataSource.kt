@@ -1,12 +1,12 @@
-package data.data.source
+package data.data.source.auth
 
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class AuthDataSource {
-
-    private val auth = FirebaseAuth.getInstance()
-
+class AuthDataSource @Inject constructor(
+    private val auth: FirebaseAuth
+) {
     suspend fun login(email: String, password: String) =
         auth.signInWithEmailAndPassword(email, password).await()
 
@@ -17,4 +17,3 @@ class AuthDataSource {
 
     fun logout() = auth.signOut()
 }
-

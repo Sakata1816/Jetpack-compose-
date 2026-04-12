@@ -1,10 +1,9 @@
-package data.data.repository
+package data.data.repository.auth
 
-import android.content.ContentValues.TAG
+import android.content.ContentValues
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
-import data.data.source.AuthDataSource
-import kotlinx.coroutines.tasks.await
+import data.data.source.auth.AuthDataSource
 import javax.inject.Inject
 
 class AnimeAuthRepository @Inject constructor(
@@ -16,7 +15,7 @@ class AnimeAuthRepository @Inject constructor(
             val result = dataSource.login(email, password)
             Result.success(result.user!!)
         }catch (e: Exception){
-            Log.e(TAG, "Login failed", e)
+            Log.e(ContentValues.TAG, "Login failed", e)
             Result.failure(mapError(e))
         }
     }
@@ -27,7 +26,7 @@ class AnimeAuthRepository @Inject constructor(
             val result = dataSource.register(email, password)
             Result.success(result.user!!)
         } catch (e: Exception) {
-            Log.e(TAG, "register failed", e)
+            Log.e(ContentValues.TAG, "register failed", e)
             Result.failure(mapError(e))
         }
     }

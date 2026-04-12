@@ -1,5 +1,6 @@
 package data.presentation.viewModel.profile
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import data.data.auth.DTO.UserProfile
-import data.data.repository.AnimeAuthRepository
-import data.data.repository.ProfileRepositoryImpl
+import data.data.repository.auth.AnimeAuthRepository
+import data.data.repository.profile.ProfileRepositoryImpl
 import data.presentation.navigation.authRoot.AuthState
 import data.presentation.state.auth.AuthUiState
 import data.presentation.state.auth.ProfileUiState
@@ -26,6 +27,9 @@ class ProfileViewModel @Inject constructor(
 
 
     var uiState by mutableStateOf<ProfileUiState>(ProfileUiState.Idle)
+        private set
+
+    var isSaved by mutableStateOf(false)
         private set
 
     var profile by mutableStateOf<UserProfile?>(null)
@@ -50,7 +54,8 @@ class ProfileViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            uiState = ProfileUiState.Loading
+            uiState =
+                ProfileUiState.Loading
 
             try {
                 val user = repository.getUser(uid)
@@ -76,16 +81,33 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateProfile(username: String, avatarUrl: String) {
-        val uid = authRepository.getCurrentUser()?.uid ?: return
+    fun updateProfile(username: String, uri: Uri?) {
         viewModelScope.launch {
+            val uid = authRepository.getCurrentUser()?.uid ?: return@launch
+            uiState = ProfileUiState.Loading
             try {
+                val avatarUrl = if (uri != null) {
+                    repository.uploadAvatar(uid, uri)
+                } else {
+                    profile?.avatarUrl ?: ""
+                }
                 repository.updateProfile(uid, username, avatarUrl)
+
+                profile = profile?.copy(
+                    username = username,
+                    avatarUrl = avatarUrl
+                )
+
+                isSaved = true   // 👈 ВАЖНО
                 uiState = ProfileUiState.Success
             } catch (e: Exception) {
                 uiState = ProfileUiState.Error(e.message ?: "Ошибка обновления профиля")
             }
         }
+    }
+    fun resetState() {
+        uiState = ProfileUiState.Idle
+        isSaved = false // 👈 ОБЯЗАТЕЛЬНО сбрасываем
     }
 
     fun logout() {

@@ -32,26 +32,33 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import data.domain.model.profile.FavoriteAnimeModel
 import data.domain.model.server.AnimeDetailModel
 import data.mapper.animeLocalMapper.toLocal
+import data.mapper.animeProfileMapper.toUi
 import data.presentation.navigation.mainRoot.NavRoute
 import data.presentation.screens.components.AnimeStatus
 import data.presentation.screens.components.StatusDropdown
 import data.presentation.viewModel.local.FavouriteAnimeViewModel
+import data.presentation.viewModel.profile.FavoriteAnimeViewModel
 import data.presentation.viewModel.server.AnimeListViewModel
 
 
 @Composable
 fun AnimeListScreen(navController: NavController,
                     viewModel: AnimeListViewModel = hiltViewModel(),
-                    localViewModel: FavouriteAnimeViewModel=hiltViewModel()
+                    localViewModel: FavoriteAnimeViewModel=hiltViewModel()
 ) {
 
     val state by viewModel.state.collectAsState()
     val listState = rememberLazyListState()
-    val favorites by localViewModel.favorites.collectAsState(initial = emptyList())
+    val favorites by localViewModel.getFavorites.collectAsState()
+
     val favoriteMap = remember(favorites) {
         favorites.associateBy { it.mal_id }
+    }
+    LaunchedEffect(favorites) {
+        println("FAVORITES UPDATE: $favorites")
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -91,7 +98,7 @@ fun AnimeListScreen(navController: NavController,
                         },
                         onStatusChange = { newStatus ->
                             localViewModel.changeStatus(
-                                anime = anime.toLocal(newStatus), // или маппер
+                                anime = anime.toUi(newStatus), // или маппер
                                 status = newStatus
                             )
                         }

@@ -1,4 +1,4 @@
-package data.data.source
+package data.data.source.server
 
 import data.data.server.jikan.Api.JikanApi
 import javax.inject.Inject

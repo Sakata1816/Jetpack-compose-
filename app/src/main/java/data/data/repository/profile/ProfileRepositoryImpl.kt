@@ -1,7 +1,8 @@
-package data.data.repository
+package data.data.repository.profile
 
+import android.net.Uri
 import data.data.auth.DTO.UserProfile
-import data.data.source.ProfileDataSource
+import data.data.source.profile.ProfileDataSource
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -16,12 +17,21 @@ class ProfileRepositoryImpl @Inject constructor(
     suspend fun createUser(profile: UserProfile) {
         dataSource.createUser(profile)
     }
+
+
+    suspend fun uploadAvatar(uid: String, uri: Uri): String {
+        return dataSource.uploadAvatar(uid, uri)
+    }
+
+
     suspend fun updateProfile(uid: String, username: String, avatarUrl: String) {
-        val updates = mapOf(
-            "username" to username,
-            "avatarUrl" to avatarUrl
+        dataSource.updateUser(
+            uid,
+            mapOf(
+                "username" to username,
+                "avatarUrl" to avatarUrl
+            )
         )
-       dataSource.updateUser(uid, updates)
     }
 
 
