@@ -57,6 +57,13 @@ android {
 
 dependencies {
     val roomVersion = "2.6.1"
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+    // build.gradle
+    implementation(libs.material.icons.extended)
+
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    implementation("androidx.compose.ui:ui-text-google-fonts")
 
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
@@ -71,7 +78,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     //для навигации
-    implementation("androidx.navigation:navigation-compose:2.7.3")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Замените выделенную строку на эту:

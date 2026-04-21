@@ -13,6 +13,11 @@ navigationCompose = "2.9.0"
 hilt = "2.48"
 
 [libraries]
+
+# libs.versions.toml
+accompanist-pager = { group = "androidx.compose.foundation", name = "foundation" }
+
+material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
