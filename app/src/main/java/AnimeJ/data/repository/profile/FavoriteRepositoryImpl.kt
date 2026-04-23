@@ -26,6 +26,8 @@ class FavoriteRepositoryImpl @Inject constructor(
         }
     }
 
+
+
     override suspend fun syncFromFirestore(): Result<Unit> {
         return try {
             val remoteList = dataSource.fetchAll()
@@ -67,8 +69,8 @@ class FavoriteRepositoryImpl @Inject constructor(
         local.isFavorite(id)
 
 
-    override fun getAnimeByStatus(status: AnimeStatus): Flow<List<FavoriteAnimeModel>> =
-        local.getAnimeByStatus(status).map { list ->
+    override fun getAnimeByStatus(status: AnimeStatus,query: String): Flow<List<FavoriteAnimeModel>> =
+        local.getAnimeByStatus(status,query).map { list ->
             list.map { it.toDomain() }
         }
 

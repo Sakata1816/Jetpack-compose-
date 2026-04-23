@@ -36,18 +36,27 @@ import AnimeJ.presentation.screens.components.AnimeStatus
 import AnimeJ.presentation.screens.components.StatusDropdown
 import AnimeJ.presentation.viewModel.profile.FavoriteAnimeViewModel
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewModelScope
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -55,80 +64,80 @@ fun FavouriteAnimeScreen(
     navController: NavController,
     viewModel: FavoriteAnimeViewModel = hiltViewModel()
 ) {
-
-
     val searchQuery by viewModel.searchQuery.collectAsState()
     val list by viewModel.getFavoritesStatus.collectAsState()
-
-    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
 
 
     val tabs = listOf(
-        FavScreen.Watching to AnimeStatus.WATCHING,
-        FavScreen.Completed to AnimeStatus.COMPLETED,
-        FavScreen.Dropped to AnimeStatus.DROPPED,
-        FavScreen.Planned to AnimeStatus.PLAN
+        "Смотрю" to AnimeStatus.WATCHING,
+        "Просмотрено" to AnimeStatus.COMPLETED,
+        "Брошено" to AnimeStatus.DROPPED,
+        "Запланировано" to AnimeStatus.PLAN
     )
 
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState { tabs.size }
 
+    // 👇 Когда свайпаем — меняем статус
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.setStatus(tabs[pagerState.currentPage].second)
+    }
 
+    Column(modifier = Modifier.fillMaxSize()) {
 
-    Box(modifier = Modifier.fillMaxSize()) {
-
-        Column {
-
-            // 🔍 SEARCH
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { viewModel.setSearch(it) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                placeholder = { Text("Search favorite anime") },
-                singleLine = true
-            )
-
-            // 📑 TABS
-            ScrollableTabRow(
-                selectedTabIndex = selectedIndex,
-                edgePadding = 16.dp,
-                indicator = { tabPositions ->
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                },
-                divider = {}
-            ) {
-                tabs.forEachIndexed { index, (screen, status) ->
-                    Tab(
-                        selected = selectedIndex == index,
-                        onClick = {
-                            selectedIndex = index
-                            viewModel.setStatus(status)
-                        },
-                        text = {
-                            Text(
-                                text = when (screen) {
-                                    FavScreen.Watching -> "Смотрю"
-                                    FavScreen.Completed -> "Просмотрено"
-                                    FavScreen.Dropped -> "Брошено"
-                                    FavScreen.Planned -> "Запланировано"
-                                },
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        },
-                        selectedContentColor = MaterialTheme.colorScheme.primary,
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+        // 🔍 SEARCH
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { viewModel.setSearch(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            placeholder = { Text("Поиск...") },
+            singleLine = true,
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.setSearch("") }) {
+                        Icon(Icons.Default.Clear, contentDescription = null)
+                    }
                 }
             }
+        )
 
-            HorizontalDivider()
+        // 📑 TABS — при нажатии скроллим pager
+        ScrollableTabRow(
+            selectedTabIndex = pagerState.currentPage,
+            edgePadding = 16.dp,
+            divider = {}
+        ) {
+            tabs.forEachIndexed { index, (title, _) ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        // 👇 При нажатии на таб — анимированно скроллим
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    text = {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    },
+                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
 
-            Spacer(modifier = Modifier.height(8.dp))
+        HorizontalDivider()
 
+        // 👇 Горизонтальный пейджер
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 if (list.isEmpty()) {
                     Column(
@@ -144,13 +153,11 @@ fun FavouriteAnimeScreen(
                         Spacer(Modifier.height(12.dp))
                         Text(
                             text = "Список пуст",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.bodyLarge
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 } else {
                     LazyColumn(
-                        state = listState,
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
@@ -169,11 +176,9 @@ fun FavouriteAnimeScreen(
                     }
                 }
             }
-
         }
     }
 }
-
 
 
 @Composable

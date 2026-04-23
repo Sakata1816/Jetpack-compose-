@@ -65,9 +65,6 @@ fun MainRoot(
             }
         },
         topBar = {
-            if (showBackButton) {
-                BackButton(navController)
-            }
 
         }
     ) {

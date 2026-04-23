@@ -17,5 +17,5 @@ class UserLocalDataSource  @Inject constructor(
     suspend fun deleteAll() = dao.deleteAll()
 
     suspend fun isFavorite  (id:Int) = dao.isFavorite(id)
-    fun getAnimeByStatus(status: AnimeStatus) = dao.getAnimeByStatus(status)
+    fun getAnimeByStatus(status: AnimeStatus, query: String) = dao.getAnimeByStatus(status,query)
 }

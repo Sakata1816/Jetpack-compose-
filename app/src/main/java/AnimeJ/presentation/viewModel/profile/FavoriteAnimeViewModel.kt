@@ -42,6 +42,12 @@ class FavoriteAnimeViewModel @Inject constructor(
         emptyList<FavoriteAnimeModel>()
     )
 
+    fun getFavoritesByStatus(status: AnimeStatus){
+        viewModelScope.launch {
+            repository.getAnimeByStatus(status,_searchQuery.value)
+        }
+    }
+
    val getFavoritesStatus = combine(
         repository.getFavorites(_searchQuery.value),
         searchQuery,

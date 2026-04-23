@@ -46,6 +46,10 @@ interface FavoriteAnimeDao {
     @Query("SELECT * FROM favorite_anime WHERE title LIKE '%' || :query || '%'")
     fun searchAnime(query: String): Flow<List<FavoriteAnimeEntity>>
 
-    @Query("SELECT * FROM favorite_anime WHERE status = :status")
-    fun getAnimeByStatus(status: AnimeStatus): Flow<List<FavoriteAnimeEntity>>
+    @Query("""
+    SELECT * FROM favorite_anime 
+    WHERE status = :status 
+    AND LOWER(title) LIKE '%' || LOWER(:query) || '%'
+""")
+    fun getAnimeByStatus(status: AnimeStatus, query: String): Flow<List<FavoriteAnimeEntity>>
 }

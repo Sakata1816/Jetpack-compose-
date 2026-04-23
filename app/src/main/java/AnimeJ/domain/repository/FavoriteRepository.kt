@@ -19,5 +19,5 @@ interface FavoriteRepository {
 
     suspend fun isFavorite(id: Int): Boolean
 
-    fun getAnimeByStatus(status: AnimeStatus): Flow<List<FavoriteAnimeModel>>
+    fun getAnimeByStatus(status: AnimeStatus,query: String): Flow<List<FavoriteAnimeModel>>
 }

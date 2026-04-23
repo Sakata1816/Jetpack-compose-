@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun BackButton(navController: NavController) {
-    IconButton(onClick = { navController.popBackStack() }) {
+fun BackButton( onBack: () -> Unit) {
+    IconButton(onClick = onBack) {
         Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
     }
 }

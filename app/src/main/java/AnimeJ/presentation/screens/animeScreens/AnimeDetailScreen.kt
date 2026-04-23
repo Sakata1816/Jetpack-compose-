@@ -35,9 +35,17 @@ import AnimeJ.domain.model.server.CharacterItemModel
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
 import AnimeJ.presentation.screens.components.BackButton
 import AnimeJ.presentation.viewModel.server.AnimeDetailViewModel
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -68,7 +76,8 @@ fun AnimeDetailsScreen(
                 state.anime?.let { anime ->
                     AnimeDetailsContent(modifier = Modifier.fillMaxSize(), anime=anime, characters = state.characters, onClick = { id->
                         navController.navigate(NavRoute.Episodes.createRoute(id))
-                    })
+                    },
+                        onBack = {navController.popBackStack()})
                 }
             }
 
@@ -85,7 +94,8 @@ fun AnimeDetailsContent(
     modifier: Modifier,
     anime: AnimeDetailModel,
     characters: List<CharacterItemModel>,
-    onClick:(Int)-> Unit
+    onClick:(Int)-> Unit,
+    onBack: () -> Unit
 ) {
     var currentScreen by remember { mutableStateOf(DetScreen.Description) }
 
@@ -95,19 +105,17 @@ fun AnimeDetailsContent(
     ) {
 
         item {
+            // Постер
+                AnimeHeader(
+                    imageUrl = anime.images?.jpg?.largeImageUrl
+                        ?: anime.images?.jpg?.imageUrl.orEmpty(),
+                    onBack
+                )
+        }
+
+        item {
 
             Column {
-
-                // Постер
-                AsyncImage(
-                    model = anime.images?.jpg?.largeImageUrl
-                        ?: anime.images?.jpg?.imageUrl,
-                    contentDescription = anime.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp),
-                    contentScale = ContentScale.Crop
-                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -202,6 +210,57 @@ fun AnimeDetailsContent(
 
 
 
+
+@Composable
+fun AnimeHeader(imageUrl: String,
+                onBack: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp)
+    ) {
+
+        // 🔹 фон blur
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .matchParentSize()
+                .blur(25.dp)
+        )
+
+        // 🔹 затемнение
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.8f), // верх
+                            Color.Transparent,              // центр
+                            Color.Black.copy(alpha = 0.9f)  // низ
+                        )
+                    )
+                )        )
+
+        // 🔹 карточка
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+                .width(200.dp)
+                .height(280.dp)
+                .clip(RoundedCornerShape(16.dp)),
+        )
+
+        BackButton(onBack)
+    }
+}
 
 @Composable
 fun AnimeDownInfo(anime: AnimeDetailModel){
