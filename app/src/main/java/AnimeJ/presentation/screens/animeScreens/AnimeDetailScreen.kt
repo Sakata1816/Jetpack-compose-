@@ -37,15 +37,31 @@ import AnimeJ.presentation.screens.components.BackButton
 import AnimeJ.presentation.viewModel.server.AnimeDetailViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -99,114 +115,185 @@ fun AnimeDetailsContent(
 ) {
     var currentScreen by remember { mutableStateOf(DetScreen.Description) }
 
+    val tabs = listOf("Descrptions","Characters")
+    val lists = listOf(anime,characters)
+
+    val pagerState = rememberPagerState { tabs.size }
+    val scope = rememberCoroutineScope()
+
+
 
     LazyColumn(
         modifier = modifier
     ) {
+        item {
+            AnimeHeader(
+                imageUrl = anime.images?.jpg?.largeImageUrl
+                    ?: anime.images?.jpg?.imageUrl.orEmpty(),
+                onBack
+            )
+        }
+
 
         item {
-            // Постер
-                AnimeHeader(
-                    imageUrl = anime.images?.jpg?.largeImageUrl
-                        ?: anime.images?.jpg?.imageUrl.orEmpty(),
-                    onBack
-                )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Название
+            Text(
+                text = anime.title,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
         }
 
         item {
+            Spacer(Modifier.height(12.dp))
 
-            Column {
+            // Информация
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Название
-                Text(
-                    text = anime.title,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Информация
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Text("Popularity: ${anime.popularity ?: "-"}")
-                    Text("Year: ${anime.year ?: "-"}")
-
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Кнопка смотреть
-                Button(
-                    onClick = { onClick(anime.id) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Text("Смотреть")
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Button(onClick = {
-                        currentScreen= DetScreen.Description
-                    }) {
-                        Text("Info")
-                    }
-
-                    Button(onClick = {
-                        currentScreen= DetScreen.Characters
-                    }) {
-                        Text("Characters")
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+                Text("Popularity: ${anime.popularity ?: "-"}")
+                Text("Year: ${anime.year ?: "-"}")
 
             }
-        when (currentScreen) {
-            DetScreen.Description -> {
-                item {
-                    AnimeDownInfo(anime)
-                }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Кнопка смотреть
+            Button(
+                onClick = { onClick(anime.id) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text("Смотреть")
             }
-            DetScreen.Characters -> {
-                items(characters) { character ->
-                    Row(){
-                        AsyncImage(
-                            model = character.images?.jpg ?.image_url ?: character.images?.webp?.image_url,
-                            contentDescription = "AnimeChatactersImage",
-                            modifier = Modifier.size(120.dp),
-                            contentScale = ContentScale.Crop
+            Spacer(modifier = Modifier.height(12.dp))
+
+        }
+
+
+        stickyHeader {
+            Surface( // 👈 Surface чтобы фон не был прозрачным при скролле
+                color = MaterialTheme.colorScheme.background
+            ) {
+                // 📑 TABS — при нажатии скроллим pager
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    divider = {}
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                // 👇 При нажатии на таб — анимированно скроллим
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = title,
+                                    style = MaterialTheme.typography.labelLarge
+                                )
+                            },
+                            selectedContentColor = MaterialTheme.colorScheme.primary,
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    }
+                }
+                HorizontalDivider()
+            }
+        }
 
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column() {
-                            Text(text = character.name)
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(text = character.role)
+        item {
+            // 👇 Горизонтальный пейджер
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight() // 👈 высота по контенту
+            ) { page ->
+
+                Box(modifier = Modifier.fillMaxSize()) {
+                    when (page) {
+                        0  -> {
+                            // Описание
+                            Column(
+                                modifier = Modifier.fillMaxSize()
+                                    .padding(16.dp)
+                            ) {
+                                AnimeDownInfo(anime)
+                            }
+                        }
+                        1 -> {
+                            // Персонажи
+                            if (characters.isEmpty()) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "Персонажи не найдены",
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            } else {
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                ) {
+                                    characters.forEach{ character ->
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            AsyncImage(
+                                                model = character.images?.jpg?.image_url
+                                                    ?: character.images?.webp?.image_url,
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .size(64.dp)
+                                                    .clip(RoundedCornerShape(8.dp)),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                            Spacer(Modifier.width(12.dp))
+                                            Column {
+                                                Text(
+                                                    text = character.name,
+                                                    style = MaterialTheme.typography.titleSmall,
+                                                    fontWeight = FontWeight.SemiBold
+                                                )
+                                                Spacer(Modifier.height(4.dp))
+                                                Text(
+                                                    text = character.role,
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                            }
+                                        }
+                                        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                                    }
+                                }
+                            }
                         }
                     }
                 }
+
             }
         }
         }
-    }
+        }
+
 
 
 
@@ -302,18 +389,6 @@ fun AnimeDownInfo(anime: AnimeDetailModel){
     }
 
 
-/*@Composable
-fun BottomContentSection(screen: Screen,anime: AnimeDetailModel,characters: List<CharacterItemModel>) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        when (screen) {
-            Screen.Screen1 -> AnimeDownInfo(anime)
-            Screen.Screen2 -> AnimeCharactersContetnt(characters)
-        }
-    }
-}*/
 
 enum class DetScreen {
     Description, Characters

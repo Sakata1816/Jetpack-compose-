@@ -8,8 +8,12 @@ import AnimeJ.domain.model.profile.FavoriteAnimeModel
 import AnimeJ.presentation.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,13 +46,22 @@ class FavoriteAnimeViewModel @Inject constructor(
         emptyList<FavoriteAnimeModel>()
     )
 
-    fun getFavoritesByStatus(status: AnimeStatus){
-        viewModelScope.launch {
-            repository.getAnimeByStatus(status,_searchQuery.value)
-        }
-    }
 
-   val getFavoritesStatus = combine(
+    private fun flowByStatus(status: AnimeStatus): StateFlow<List<FavoriteAnimeModel>> =
+        _searchQuery
+            .debounce(300)
+            .distinctUntilChanged()
+            .flatMapLatest { query -> repository.getAnimeByStatus(status, query) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val watchingList = flowByStatus(AnimeStatus.WATCHING)
+    val completedList = flowByStatus(AnimeStatus.COMPLETED)
+    val droppedList = flowByStatus(AnimeStatus.DROPPED)
+    val plannedList = flowByStatus(AnimeStatus.PLAN)
+
+
+
+/*   val getFavoritesStatus = combine(
         repository.getFavorites(_searchQuery.value),
         searchQuery,
         statusFilter
@@ -65,7 +78,7 @@ class FavoriteAnimeViewModel @Inject constructor(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         emptyList<FavoriteAnimeModel>()
-    )
+    )*/
 
     fun syncFromFirestore(){
         viewModelScope.launch {
@@ -74,25 +87,6 @@ class FavoriteAnimeViewModel @Inject constructor(
     }
 
 
-  /*  private fun observeFavorites() {
-        combine(
-            repository.getFavorites(),
-            searchQuery,
-            statusFilter
-        ) { list, query, status ->
-            list.filter { anime ->
-                (status == AnimeStatus.NONE || anime.status == status) &&
-                        anime.title.contains(query, ignoreCase = true)
-            }
-        }
-            .onEach { filteredList ->
-                _state.update { it.copy(favorites = filteredList, isLoading = false, error = null) }
-            }
-            .catch { e ->
-                _state.update { it.copy(favorites = emptyList<FavoriteAnimeModel>(), isLoading = false, error = e.message ?: "Unknown error") }
-            }
-            .launchIn(viewModelScope)
-    }*/
 
     fun setSearch(query: String){
         _searchQuery.value=query

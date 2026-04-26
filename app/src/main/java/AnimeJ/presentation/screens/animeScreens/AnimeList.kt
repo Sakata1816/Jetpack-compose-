@@ -39,6 +39,13 @@ import AnimeJ.presentation.screens.components.AnimeStatus
 import AnimeJ.presentation.screens.components.StatusDropdown
 import AnimeJ.presentation.viewModel.profile.FavoriteAnimeViewModel
 import AnimeJ.presentation.viewModel.server.AnimeListViewModel
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextFieldDefaults
 
 
 @Composable
@@ -67,10 +74,34 @@ fun AnimeListScreen(navController: NavController,
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                placeholder = { Text("Search anime") },
-                singleLine = true
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                shape = RoundedCornerShape(50.dp),
+                placeholder = { Text("Поиск...") },
+                singleLine = true,
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    ) },
+                trailingIcon = {
+                    if (state.searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { viewModel.onSearchChange("") }) {
+                            Icon(Icons.Default.Clear,
+                                contentDescription = null)
+                        }
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                    cursorColor = MaterialTheme.colorScheme.primary
+                ),
+                textStyle = MaterialTheme.typography.bodyMedium
             )
+
 
             LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
 
