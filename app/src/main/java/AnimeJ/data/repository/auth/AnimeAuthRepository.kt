@@ -4,13 +4,14 @@ import android.content.ContentValues
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
 import AnimeJ.data.source.auth.AuthDataSource
+import AnimeJ.domain.repository.AnimeAuthRepository
 import javax.inject.Inject
 
-class AnimeAuthRepository @Inject constructor(
+class AnimeAuthRepositoryImpl @Inject constructor(
     private val dataSource: AuthDataSource
-) {
+): AnimeAuthRepository {
 
-    suspend fun login(email: String, password: String): Result<FirebaseUser> {
+    override suspend fun login(email: String, password: String): Result<FirebaseUser> {
         return try {
             val result = dataSource.login(email, password)
             Result.success(result.user!!)
@@ -21,7 +22,7 @@ class AnimeAuthRepository @Inject constructor(
     }
 
 
-    suspend fun register(email: String, password: String): Result<FirebaseUser> {
+   override suspend fun register(email: String, password: String): Result<FirebaseUser> {
         return try {
             val result = dataSource.register(email, password)
             Result.success(result.user!!)
@@ -31,9 +32,9 @@ class AnimeAuthRepository @Inject constructor(
         }
     }
 
-   fun getCurrentUser() = dataSource.getCurrentUser()
+  override fun getCurrentUser() = dataSource.getCurrentUser()
 
-   fun logout() = dataSource.logout()
+  override fun logout() = dataSource.logout()
 
     private fun mapError(e: Exception): Exception {
         return Exception(

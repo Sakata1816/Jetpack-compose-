@@ -17,10 +17,36 @@ data class AnimeDetailDto(
     val status: String?,
     val year: Int?,
     val season: String?,
-    val producers: List<NameDto> = emptyList(),
-    val studios: List<NameDto> = emptyList(),
-    val genres: List<NameDto> = emptyList(),
-    val trailer: TrailerDto? = null
+    val producers: List<NameDto>?,
+    val studios: List<NameDto>?,
+    val genres: List<NameDto>?,
+    val trailer: TrailerDto?,
+    val duration: String?,
+    val rating: String?,
+    val type: String?,
+    val source: String?,
+    val aired: AiredDto?,
+    val members: Int?,
+    val favorites: Int?,
+    val scoredBy: Int?,
+    val themes: List<NameDto>?,
+    val demographics: List<NameDto>?
 )
 
+data class AiredDto(
+    val from: String?,
+    val to: String?,
+    val prop:PropDto?
+)
+
+data class PropDto(
+    val from: DateParts?,
+    val to: DateParts?
+)
+
+data class DateParts(
+    val day: Int?,
+    val month: Int?,
+    val year: Int?
+)
 

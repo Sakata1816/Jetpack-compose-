@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import AnimeJ.data.remote.auth.DTO.UserProfile
-import AnimeJ.data.repository.auth.AnimeAuthRepository
-import AnimeJ.data.repository.profile.ProfileRepositoryImpl
+import AnimeJ.domain.repository.AnimeAuthRepository
+import AnimeJ.domain.repository.ProfileRepository
 import AnimeJ.presentation.navigation.authRoot.AuthState
 import AnimeJ.presentation.state.auth.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val repository: ProfileRepositoryImpl,
+    private val repository: ProfileRepository,
     private val authRepository: AnimeAuthRepository
 ) : ViewModel() {
 

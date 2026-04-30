@@ -1,14 +1,12 @@
 package AnimeJ.domain.model.profile
 
+import AnimeJ.domain.model.server.ImagesModel
+import AnimeJ.domain.model.server.NameModel
+import AnimeJ.domain.model.server.TrailerModel
 import AnimeJ.presentation.screens.components.AnimeStatus
+import androidx.room.PrimaryKey
 
-data class FavoriteAnimeModelProfile(
-    val mal_id: Int=0,
-    val title: String="",
-    val imageUrl: String? = null,
-    val score: Double? = null,
-    val status: AnimeStatus = AnimeStatus.NONE
-)
+
 
 
 data class FavoriteAnimeModel(
@@ -16,5 +14,12 @@ data class FavoriteAnimeModel(
     val title: String,
     val imageUrl: String?,
     val score: Double?,
-    var status: AnimeStatus= AnimeStatus.NONE
+    val episodes: Int?,
+    val rank: Int?,
+    val members: Int?,
+    val type: String?,
+    val rating: String?,
+    val genres: List<NameModel>?,
+    val status: AnimeStatus = AnimeStatus.NONE
 )
+

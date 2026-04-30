@@ -1,6 +1,9 @@
 package AnimeJ.presentation.screens.animeScreens
 
 import AnimeJ.domain.model.profile.FavoriteAnimeModel
+import AnimeJ.domain.model.server.AnimeDetailModel
+import AnimeJ.mapper.animeProfileMapper.toDetail
+import AnimeJ.mapper.animeProfileMapper.toUi
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
 import AnimeJ.presentation.screens.components.AnimeStatus
 import AnimeJ.presentation.screens.components.StatusDropdown
@@ -39,6 +42,7 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -70,6 +74,10 @@ fun FavouriteAnimeScreen(
 
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.syncFromFirestore()
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -167,15 +175,18 @@ fun FavouriteAnimeScreen(
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
                         items(pageList) { anime ->
-                            FavouriteAnime(
-                                anime = anime,
+                            Anime(
+                                anime = anime.toDetail(),
                                 onClick = { id ->
                                     navController.navigate(NavRoute.AnimeDetails.createRoute(id))
                                 },
+                                currentStatus = anime.status,
                                 onStatusChange = { newStatus ->
-                                    viewModel.changeStatus(anime, newStatus)
-                                },
-                                currentStatus = anime.status
+                                    viewModel.changeStatus(
+                                        anime = anime, // или маппер
+                                        status = newStatus
+                                    )
+                                }
                             )
                         }
                     }

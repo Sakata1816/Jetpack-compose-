@@ -4,7 +4,7 @@ import AnimeJ.presentation.state.server.AnimeEpisodesUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.data.repository.server.AnimeRepositoryImpl
+import AnimeJ.domain.repository.AnimeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EpisodeListViewModel  @Inject constructor(
-    private val repository: AnimeRepositoryImpl
+    private val repository: AnimeRepository
 ): ViewModel(){
     private val _state= MutableStateFlow(AnimeEpisodesUiState())
     val state=_state.asStateFlow()

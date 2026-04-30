@@ -3,25 +3,26 @@ package AnimeJ.data.repository.profile
 import android.net.Uri
 import AnimeJ.data.remote.auth.DTO.UserProfile
 import AnimeJ.data.source.profile.ProfileDataSource
+import AnimeJ.domain.repository.ProfileRepository
 import androidx.core.os.requestProfiling
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
     private val dataSource: ProfileDataSource
-) {
+): ProfileRepository {
 
-    suspend fun getUser(uid: String): UserProfile? {
+  override  suspend fun getUser(uid: String): UserProfile? {
         val doc = dataSource.getUser(uid)
         return doc.toObject(UserProfile::class.java)
     }
 
 
-    suspend fun createUser(profile: UserProfile) {
+  override  suspend fun createUser(profile: UserProfile) {
         dataSource.createUser(profile)
     }
 
 
-    suspend fun updateProfile(uid: String, username: String, avatarUrl: String) {
+   override suspend fun updateProfile(uid: String, username: String, avatarUrl: String) {
         dataSource.updateUser(
             uid,
             mapOf(
@@ -32,12 +33,12 @@ class ProfileRepositoryImpl @Inject constructor(
     }
 
 
-    suspend fun uploadAvatar(uid: String, uri: Uri): String {
+   override suspend fun uploadAvatar(uid: String, uri: Uri): String {
         return dataSource.uploadAvatar(uid, uri)
     }
 
 
-    suspend fun ensureUserProfile(uid: String, email: String): UserProfile {
+   override suspend fun ensureUserProfile(uid: String, email: String): UserProfile {
         val existingProfile = getUser(uid)
         return if (existingProfile != null) {
             existingProfile

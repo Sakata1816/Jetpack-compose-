@@ -12,7 +12,13 @@ fun FavoriteAnimeEntity.toDomain(): FavoriteAnimeModel {
         title = title,
         imageUrl = imageUrl ,
         score = score,
-        status=status
+        episodes = episodes,
+        rank = rank,
+        members = members,
+        type = type,
+        rating = rating,
+        genres = genres,
+        status = status
     )
 }
 
@@ -20,18 +26,16 @@ fun FavoriteAnimeModel.toEntity(): FavoriteAnimeEntity {
     return FavoriteAnimeEntity(
         mal_id = mal_id,
         title = title,
-        imageUrl = imageUrl,
+        imageUrl = imageUrl ,
         score = score,
-        status=status
-    )
-}
-
-fun AnimeDetailModel.toLocal(status: AnimeStatus): FavoriteAnimeModel {
-    return FavoriteAnimeModel(
-        mal_id = id,
-        title = title,
-        imageUrl = images?.jpg?.largeImageUrl,
-        score = score,
+        episodes = episodes,
+        rank = rank,
+        members = members,
+        type = type,
+        rating = rating,
+        genres = genres,
         status = status
     )
 }
+
+

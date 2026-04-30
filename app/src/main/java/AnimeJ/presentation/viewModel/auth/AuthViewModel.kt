@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.data.repository.auth.AnimeAuthRepository
-import AnimeJ.data.repository.profile.ProfileRepositoryImpl
+import AnimeJ.domain.repository.AnimeAuthRepository
+import AnimeJ.domain.repository.ProfileRepository
 import AnimeJ.presentation.state.auth.AuthUiState
 import AnimeJ.presentation.navigation.authRoot.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val repository: AnimeAuthRepository,
-    private val profileRepository: ProfileRepositoryImpl
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     // UI состояние

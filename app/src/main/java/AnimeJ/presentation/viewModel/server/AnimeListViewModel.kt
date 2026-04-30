@@ -1,11 +1,10 @@
 package AnimeJ.presentation.viewModel.server
 
-import AnimeJ.data.repository.server.AnimeRepositoryImpl
 import AnimeJ.presentation.state.server.AnimeListUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.domain.model.server.AnimeDetailModel
+import AnimeJ.domain.repository.AnimeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnimeListViewModel @Inject constructor(
-    private val repository: AnimeRepositoryImpl
+    private val repository: AnimeRepository
 ) : ViewModel(){
     private val _state = MutableStateFlow(AnimeListUiState())
     val state: StateFlow<AnimeListUiState> = _state.asStateFlow()
@@ -86,8 +85,8 @@ init {
             repository.getAllAnimeList(uiState.currentPage,uiState.searchQuery).fold(
                 onSuccess = { response ->
                     val newList = uiState.anime + response.data
-                    val nextPage = (response.pagination.current_page ?: uiState.currentPage) + 1
-                    val hasNext = response.pagination.has_next_page ?: false
+                    val nextPage = (response.pagination?.current_page ?: uiState.currentPage) + 1
+                    val hasNext = response.pagination?.has_next_page ?: false
                     _state.update { it.copy(
                             anime = newList,
                             isLoading = false,

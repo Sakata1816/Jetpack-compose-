@@ -1,6 +1,6 @@
 package AnimeJ.presentation.viewModel.server
 
-import AnimeJ.data.repository.server.AnimeRepositoryImpl
+import AnimeJ.domain.repository.AnimeRepository
 import AnimeJ.presentation.state.server.AnimeDetailUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AnimeViewModel @Inject constructor( val repository: AnimeRepositoryImpl): ViewModel() {
+class AnimeViewModel @Inject constructor( val repository: AnimeRepository): ViewModel() {
     private val _state= MutableStateFlow(AnimeDetailUiState())
     val state=_state.asStateFlow()
 

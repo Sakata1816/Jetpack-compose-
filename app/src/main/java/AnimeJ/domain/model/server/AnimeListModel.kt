@@ -1,7 +1,7 @@
 package AnimeJ.domain.model.server
 
 data class AnimeResponseModel(
-    val pagination: PaginationAnimeModel,
+    val pagination: PaginationAnimeModel?,
     val data: List<AnimeDetailModel>
 )
 

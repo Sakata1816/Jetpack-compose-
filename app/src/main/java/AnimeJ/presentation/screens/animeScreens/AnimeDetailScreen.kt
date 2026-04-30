@@ -370,7 +370,7 @@ fun AnimeDownInfo(anime: AnimeDetailModel){
         // Жанры
         Text(
             text = "Genres: " +
-                    anime.genres.joinToString { it.name },
+                    anime.genres?.joinToString { it.name },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
@@ -379,7 +379,7 @@ fun AnimeDownInfo(anime: AnimeDetailModel){
         // Студии
         Text(
             text = "Studios: " +
-                    anime.studios.joinToString { it.name },
+                    anime.studios?.joinToString { it.name },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 

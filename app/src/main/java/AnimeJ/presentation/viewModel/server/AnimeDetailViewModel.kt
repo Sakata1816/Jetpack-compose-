@@ -3,7 +3,7 @@ package AnimeJ.presentation.viewModel.server
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.data.repository.server.AnimeRepositoryImpl
+import AnimeJ.domain.repository.AnimeRepository
 import AnimeJ.presentation.state.server.AnimeDetailUiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,22 +14,19 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AnimeDetailViewModel @Inject constructor( val repository: AnimeRepositoryImpl): ViewModel() {
+class AnimeDetailViewModel @Inject constructor( val repository: AnimeRepository): ViewModel() {
     val _state = MutableStateFlow(AnimeDetailUiState())
     val state=_state.asStateFlow()
 
     fun loadAnime(id: Int){
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
-                val animeDeferred = async {
-                    repository.getAnimeInfo(id)
-                }
+                val animeDeferred = repository.getAnimeInfo(id)
 
-                val animeResult = animeDeferred.await()
-
-            animeResult.fold(
+            animeDeferred.fold(
                 onSuccess = {response->
-                    _state.update { it.copy(anime=response.data) }
+                    _state.update { it.copy(anime=response.data,
+                        isLoading = false) }
                 },
                 onFailure = {throwable ->
                     _state.update { it.copy(error=throwable.message?:"unknown error") }

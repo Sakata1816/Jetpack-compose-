@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import AnimeJ.data.repository.profile.FavoriteRepositoryImpl
 import AnimeJ.domain.model.profile.FavoriteAnimeModel
+import AnimeJ.domain.repository.FavoriteRepository
 import AnimeJ.presentation.screens.components.AnimeStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,10 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteAnimeViewModel @Inject constructor(
-    private val repository: FavoriteRepositoryImpl
+    private val repository: FavoriteRepository
 ): ViewModel() {
- /*   private val _state= MutableStateFlow(FavoriteAnimeUiState())
-    val state=_state.asStateFlow()*/
 
     private val _searchQuery=MutableStateFlow("")
     val searchQuery=_searchQuery.asStateFlow()

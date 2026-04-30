@@ -1,17 +1,27 @@
 package AnimeJ.presentation.screens.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,19 +30,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 
 
-enum class AnimeStatus(val title: String, val color: Color) {
-    NONE("Добавить в", Color.Gray),
-    PLAN("В планах", Color.LightGray),
-    WATCHING("Смотрю", Color.Blue),
-    DROPPED("Брошено", Color.Red),
-    COMPLETED("Просмотрено", Color.Green),
-    DELETED("Удалить из списка", Color.Red)
+enum class AnimeStatus(val title: String) {
+    NONE("Добавить в"),
+    PLAN("В планах"),
+    WATCHING("Смотрю"),
+    DROPPED("Брошено"),
+    COMPLETED("Просмотрено"),
+    DELETED("Удалить из списка")
 }
 
+fun AnimeStatus.toColor(): Color = when (this) {
+    AnimeStatus.NONE -> Color.Gray
+    AnimeStatus.PLAN -> Color.LightGray
+    AnimeStatus.WATCHING -> Color(0xFF2196F3)
+    AnimeStatus.DROPPED -> Color.Red
+    AnimeStatus.COMPLETED -> Color.Green
+    AnimeStatus.DELETED -> Color.Red
+}
 @Composable
 fun StatusDropdown(
     currentStatus: AnimeStatus,
@@ -45,7 +66,7 @@ fun StatusDropdown(
         Button(
             onClick = { expanded = true },
             colors = ButtonDefaults.buttonColors(
-                containerColor = currentStatus.color
+                containerColor = currentStatus.toColor()
             )
         ) {
             Text(
@@ -65,7 +86,7 @@ fun StatusDropdown(
                             Box(
                                 modifier = Modifier
                                     .size(10.dp)
-                                    .background(status.color, CircleShape)
+                                    .background(status.toColor(), CircleShape)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(status.title)
@@ -80,6 +101,85 @@ fun StatusDropdown(
             }
 
 
+        }
+    }
+}
+
+@Composable
+fun StatusModal(
+    visible: Boolean,
+    currentStatus: AnimeStatus,
+    onDismiss: () -> Unit,
+    onStatusSelected: (AnimeStatus) -> Unit
+){
+    if (!visible) return
+
+
+
+    Dialog(onDismissRequest = onDismiss) {
+
+        val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+        val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+
+        Box(
+            modifier = Modifier
+                .width(screenWidth * 0.7f)
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .padding(16.dp)
+        ) {
+            Column (modifier = Modifier.fillMaxWidth()){
+
+                Text(
+                    text = "Status",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                AnimeStatus.values().drop(1).forEach { status ->
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onStatusSelected(status)
+                                onDismiss()
+                            }
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                            RoundCheckbox(
+                                checked = status == currentStatus,
+                                onCheckedChange = {
+                                    onStatusSelected(status)
+                                    onDismiss()
+                                }
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Text(
+                                text = status.title,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                    }
+                }
+                Button(
+                    onClick = { onDismiss() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Cancel",
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
         }
     }
 }

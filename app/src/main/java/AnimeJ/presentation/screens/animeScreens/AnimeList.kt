@@ -35,17 +35,28 @@ import coil.compose.AsyncImage
 import AnimeJ.domain.model.server.AnimeDetailModel
 import AnimeJ.mapper.animeProfileMapper.toUi
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
+import AnimeJ.presentation.screens.components.AnimeCardWithMenu
 import AnimeJ.presentation.screens.components.AnimeStatus
 import AnimeJ.presentation.screens.components.StatusDropdown
+import AnimeJ.presentation.screens.components.toColor
 import AnimeJ.presentation.viewModel.profile.FavoriteAnimeViewModel
 import AnimeJ.presentation.viewModel.server.AnimeListViewModel
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 
 
 @Composable
@@ -60,9 +71,6 @@ fun AnimeListScreen(navController: NavController,
 
     val favoriteMap = remember(favorites) {
         favorites.associateBy { it.mal_id }
-    }
-    LaunchedEffect(favorites) {
-        println("FAVORITES UPDATE: $favorites")
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -170,39 +178,166 @@ fun Anime(
     currentStatus: AnimeStatus,
     onClick: (Int) -> Unit,
     onStatusChange: (AnimeStatus) -> Unit
-
-){
-    Row(
+) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .clickable{onClick(anime.id)}
+            .padding(12.dp,6.dp)
+            .clickable { onClick(anime.id) },
+        shape = RoundedCornerShape(16.dp)
     ) {
+        Column { // 👈 Column чтобы статус был снизу
+            Row(modifier = Modifier.padding(12.dp)) {
 
-        AsyncImage(
-            model = anime.images?.jpg?.largeImageUrl,
-            contentDescription = null,
-            modifier = Modifier.size(80.dp)
-        )
+                // 🔥 ЛЕВАЯ ЧАСТЬ (КАРТИНКА)
+                Box(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(180.dp)
+                ) {
+                    AsyncImage(
+                        model = anime.images?.jpg?.largeImageUrl ?: "",
+                        contentDescription = null,
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
-        Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
-        Text(
-            text = anime.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
-        )
+                // 👉 ПРАВАЯ ЧАСТЬ
+                Column(modifier = Modifier.weight(1f)) {
 
-        StatusDropdown(
-            currentStatus = currentStatus,
-            onStatusSelected = { status ->
-                onStatusChange(status)
+                    // 👇 TV/Movie бейдж — теперь здесь, справа сверху
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = anime.status ?: "",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Gray
+                        )
+                      //для три точки
+                        AnimeCardWithMenu(currentStatus,
+                            onStatusChange)
+
+
+                    }
+
+                    Text(
+                        text = "${anime.episodes ?: "?"} episodes",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        text = anime.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 2
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row {
+                        Text(
+                            text = "⭐ ${anime.score?.let { String.format("%.2f", it) } ?: "-"}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "${anime.members ?: 0} users",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "#${anime.rank ?: "-"} Ranking",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 🎭 жанры
+                    Row {
+                        anime.genres?.take(3)?.forEach { genre ->
+                            Box(
+                                modifier = Modifier
+                                    .padding(end = 6.dp)
+                                    .background(
+                                        MaterialTheme.colorScheme.surfaceVariant,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = genre.name,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row( modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // 👇 Rating — теперь здесь в тексте
+                        Text(
+                            text = anime.rating ?: "",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        // 🔵 Тип (TV/Movie) — в углу справа сверху
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    MaterialTheme.colorScheme.primaryContainer,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = anime.type ?: "TV",
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
+                    }
+
+                }
             }
 
-        )
+            // 👇 Статус — снизу карточки на всю ширину, только если не NONE
+            if (currentStatus != AnimeStatus.NONE) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = currentStatus.toColor().copy(alpha = 0.15f),
+                        )
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = currentStatus.title,
+                        color = currentStatus.toColor(),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        }
     }
-
 }
-
-
-

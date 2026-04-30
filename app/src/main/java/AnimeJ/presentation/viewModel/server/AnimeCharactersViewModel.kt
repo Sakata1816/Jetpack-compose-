@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import AnimeJ.data.repository.server.AnimeRepositoryImpl
+import AnimeJ.domain.repository.AnimeRepository
 import AnimeJ.presentation.state.server.AnimeCharactersUiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AnimeCharactersViewModel @Inject constructor(val repository: AnimeRepositoryImpl): ViewModel(){
+class AnimeCharactersViewModel @Inject constructor(val repository: AnimeRepository): ViewModel(){
     val _state= MutableStateFlow(AnimeCharactersUiState())
     val state=_state.asStateFlow()
 

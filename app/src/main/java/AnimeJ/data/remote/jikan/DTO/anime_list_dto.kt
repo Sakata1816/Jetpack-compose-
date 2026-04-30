@@ -1,7 +1,7 @@
 package AnimeJ.data.remote.jikan.DTO
 
 data class AnimeResponse(
-    val pagination: PaginationAnimeDto,
+    val pagination: PaginationAnimeDto?,
     val data: List<AnimeDetailDto>
 )
 

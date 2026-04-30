@@ -11,7 +11,7 @@ import kotlin.collections.map
 
 fun AnimeResponse.toModel(): AnimeResponseModel{
     return AnimeResponseModel(
-        pagination=pagination.toModel(),
+        pagination=pagination?.toModel(),
         data=data.map { it.toModel() }
     )
 }
