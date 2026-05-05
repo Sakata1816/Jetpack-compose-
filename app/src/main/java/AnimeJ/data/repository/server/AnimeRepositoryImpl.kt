@@ -9,7 +9,7 @@ import AnimeJ.domain.model.server.AnimeResponseModel
 import AnimeJ.domain.model.server.CharactersResponseModel
 import AnimeJ.domain.model.server.EpisodeDetailResponseModel
 import AnimeJ.domain.model.server.StreamingResponseModel
-import AnimeJ.domain.repository.AnimeRepository
+import AnimeJ.domain.repository.server.AnimeRepository
 import AnimeJ.mapper.animeLocalMapper.toDomain
 import AnimeJ.mapper.animeLocalMapper.toEntity
 import AnimeJ.mapper.animeServerMapper.toModel

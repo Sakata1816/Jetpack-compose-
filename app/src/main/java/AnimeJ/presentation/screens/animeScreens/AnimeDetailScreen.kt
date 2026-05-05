@@ -45,6 +45,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -251,37 +252,7 @@ fun AnimeDetailsContent(
                                     modifier = Modifier.fillMaxSize(),
                                 ) {
                                     characters.forEach{ character ->
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            AsyncImage(
-                                                model = character.images?.jpg?.image_url
-                                                    ?: character.images?.webp?.image_url,
-                                                contentDescription = null,
-                                                modifier = Modifier
-                                                    .size(64.dp)
-                                                    .clip(RoundedCornerShape(8.dp)),
-                                                contentScale = ContentScale.Crop
-                                            )
-                                            Spacer(Modifier.width(12.dp))
-                                            Column {
-                                                Text(
-                                                    text = character.name,
-                                                    style = MaterialTheme.typography.titleSmall,
-                                                    fontWeight = FontWeight.SemiBold
-                                                )
-                                                Spacer(Modifier.height(4.dp))
-                                                Text(
-                                                    text = character.role,
-                                                    style = MaterialTheme.typography.bodySmall,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                )
-                                            }
-                                        }
-                                        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                                        Characters(character)
                                     }
                                 }
                             }
@@ -387,6 +358,54 @@ fun AnimeDownInfo(anime: AnimeDetailModel){
 
     }
     }
+
+@Composable
+fun Characters(character: CharacterItemModel){
+
+    Card(modifier = Modifier.fillMaxWidth()
+        .padding(12.dp,6.dp),
+        shape = RoundedCornerShape(16.dp)) {
+
+        Column{
+            Row(modifier = Modifier.padding(12.dp)) {
+                Box(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(90.dp)
+                ){
+                    AsyncImage(
+                        model = character.images?.jpg?.image_url?:"",
+                        contentDescription = null,
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column {
+                    Text(
+                        text = character.name,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = character.role,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+
+            }
+        }
+
+    }
+
+}
 
 
 

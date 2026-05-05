@@ -10,12 +10,12 @@ import AnimeJ.domain.model.server.NameModel
 import AnimeJ.presentation.screens.components.AnimeStatus
 import androidx.room.PrimaryKey
 
-data class UserProfile(
+data class UserProfileDto(
     val uid: String="",         // совпадает с FirebaseAuth uid
-    val email: String="",
-    val username: String = "",
-    val avatarUrl: String = "",
-    val favorites: List<FavoriteAnimeProfileDto> = emptyList()
+    val email: String?="",
+    val username: String? = "",
+    val avatarUrl: String? = "",
+    val favorites: List<FavoriteAnimeProfileDto>? = emptyList()
 )
 
 

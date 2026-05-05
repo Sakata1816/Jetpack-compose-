@@ -1,8 +1,7 @@
-package AnimeJ.domain.repository
+package AnimeJ.domain.repository.profile
 
 import AnimeJ.domain.model.profile.FavoriteAnimeModel
 import AnimeJ.presentation.screens.components.AnimeStatus
-import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteRepository {
@@ -17,7 +16,5 @@ interface FavoriteRepository {
     //LOCAL
     suspend fun deleteAnime(id: Int): Result<Unit>
 
-    suspend fun isFavorite(id: Int): Boolean
-
-    fun getAnimeByStatus(status: AnimeStatus,query: String): Flow<List<FavoriteAnimeModel>>
+    fun getAnimeByStatus(status: AnimeStatus, query: String): Flow<List<FavoriteAnimeModel>>
 }

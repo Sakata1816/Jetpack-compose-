@@ -29,4 +29,7 @@ object DatabaseModule {
     fun provideUserDao(db: AppDatabase): FavoriteAnimeDao {
         return db.favouriteAnimeDao()
     }
+
+
 }
+

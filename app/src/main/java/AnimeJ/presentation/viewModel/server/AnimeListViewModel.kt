@@ -4,7 +4,7 @@ import AnimeJ.presentation.state.server.AnimeListUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.domain.repository.AnimeRepository
+import AnimeJ.domain.repository.server.AnimeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,17 +62,6 @@ init {
         }
     }
 
-    fun searchAnime() {
-        _state.update {
-            it.copy(
-                anime = emptyList(),
-                currentPage = 1,
-                hasNextPage = true
-            )
-        }
-
-        loadAnimeList()
-    }
 
     fun loadAnimeList() {
         val uiState = _state.value

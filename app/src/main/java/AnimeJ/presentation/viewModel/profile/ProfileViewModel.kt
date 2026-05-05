@@ -8,9 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.data.remote.auth.DTO.UserProfile
-import AnimeJ.domain.repository.AnimeAuthRepository
-import AnimeJ.domain.repository.ProfileRepository
+import AnimeJ.data.remote.auth.DTO.UserProfileDto
+import AnimeJ.domain.model.profile.UserProfileModel
+import AnimeJ.domain.repository.auth.AnimeAuthRepository
+import AnimeJ.domain.repository.profile.ProfileRepository
+import AnimeJ.mapper.animeProfileMapper.toDto
+import AnimeJ.mapper.animeProfileMapper.toModel
 import AnimeJ.presentation.navigation.authRoot.AuthState
 import AnimeJ.presentation.state.auth.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,16 +34,9 @@ class ProfileViewModel @Inject constructor(
     var isSaved by mutableStateOf(false)
         private set
 
-    var profile by mutableStateOf<UserProfile?>(null)
+    var profile by mutableStateOf<UserProfileModel?>(null)
         private set
 
-    private val _authState = MutableStateFlow<AuthState>(
-        if (authRepository.getCurrentUser() != null)
-            AuthState.Authorized
-        else
-            AuthState.Unauthorized
-    )
-    val authState = _authState.asStateFlow()
 
 
 
@@ -53,29 +49,29 @@ class ProfileViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            uiState =
-                ProfileUiState.Loading
+            uiState = ProfileUiState.Loading
 
-            try {
-                val user = repository.getUser(uid)
+                val result = repository.getUser(uid).fold(
+                    onSuccess = {respose->
+                        if (respose != null) {
+                            profile = respose.toModel()
+                            uiState = ProfileUiState.Success
+                        } else {
+                            uiState = ProfileUiState.Error("Профиль не найден")
+                        }
+                    },
+                    onFailure = {throwable ->
+                        uiState = ProfileUiState.Error("Ошибка загрузки профиля")
 
-                if (user != null) {
-                    profile = user
-                    uiState = ProfileUiState.Success
-                } else {
-                    uiState = ProfileUiState.Error("Профиль не найден")
-                }
-
-            } catch (e: Exception) {
-                Log.e("ProfileVM", "loadProfile error", e)
-                uiState = ProfileUiState.Error("Ошибка загрузки профиля")
+                    }
+                )
             }
         }
-    }
 
-    fun createProfile(profile: UserProfile) {
+
+    fun createProfile(profile: UserProfileModel) {
         viewModelScope.launch {
-            repository.createUser(profile)
+            repository.createUser(profile.toDto())
             this@ProfileViewModel.profile = profile
         }
     }
@@ -86,9 +82,9 @@ class ProfileViewModel @Inject constructor(
             uiState = ProfileUiState.Loading
             try {
                 val avatarUrl = if (uri != null) {
-                    repository.uploadAvatar(uid, uri)
+                    repository.uploadAvatar(uid, uri).getOrThrow()
                 } else {
-                    profile?.avatarUrl ?: ""
+                    profile?.avatarUrl
                 }
                 repository.updateProfile(uid, username, avatarUrl)
 
@@ -104,13 +100,10 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
     fun resetState() {
         uiState = ProfileUiState.Idle
         isSaved = false // 👈 ОБЯЗАТЕЛЬНО сбрасываем
     }
 
-    fun logout() {
-        authRepository.logout()
-        _authState.value = AuthState.Unauthorized
-        uiState = ProfileUiState.Idle
-    }}
+}

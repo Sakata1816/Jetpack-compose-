@@ -4,19 +4,46 @@ import android.content.ContentValues
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
 import AnimeJ.data.source.auth.AuthDataSource
-import AnimeJ.domain.repository.AnimeAuthRepository
+import AnimeJ.domain.repository.auth.AnimeAuthRepository
+import AnimeJ.presentation.navigation.authRoot.AuthState
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 class AnimeAuthRepositoryImpl @Inject constructor(
     private val dataSource: AuthDataSource
 ): AnimeAuthRepository {
 
+    // Метод для получения флоу авторизован или нет
+    override suspend fun observeAuthState(): Flow<AuthState> {
+        return callbackFlow {
+            val auth = FirebaseAuth.getInstance()
+
+            val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+                val state = if (firebaseAuth.currentUser != null) {
+                    AuthState.Authorized
+                } else {
+                    AuthState.Unauthorized
+                }
+
+                trySend(state) // отправляем значение в Flow
+            }
+
+            auth.addAuthStateListener(listener)
+
+            awaitClose {
+                auth.removeAuthStateListener(listener)
+            }
+        }
+    }
+
     override suspend fun login(email: String, password: String): Result<FirebaseUser> {
         return try {
             val result = dataSource.login(email, password)
             Result.success(result.user!!)
         }catch (e: Exception){
-            Log.e(ContentValues.TAG, "Login failed", e)
             Result.failure(mapError(e))
         }
     }

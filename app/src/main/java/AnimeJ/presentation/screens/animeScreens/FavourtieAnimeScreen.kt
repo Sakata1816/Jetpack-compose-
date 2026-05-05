@@ -51,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
@@ -63,14 +64,15 @@ fun FavouriteAnimeScreen(
     navController: NavController,
     viewModel: FavoriteAnimeViewModel = hiltViewModel()
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsState()
-    val watchingList by viewModel.watchingList.collectAsState()
-    val completedList by viewModel.completedList.collectAsState()
-    val droppedList by viewModel.droppedList.collectAsState()
-    val plannedList by viewModel.plannedList.collectAsState()
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val tabs = listOf("Смотрю", "Просмотрено", "Брошено", "Запланировано")
-    val lists = listOf(watchingList, completedList, droppedList, plannedList)
+    val lists = listOf(
+        state.watchingList,
+        state.completedList,
+        state.droppedList,
+        state.plannedList)
 
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
@@ -83,7 +85,7 @@ fun FavouriteAnimeScreen(
 
         // 🔍 SEARCH
         OutlinedTextField(
-            value = searchQuery,
+            value = state.searchQuery,
             onValueChange = { viewModel.setSearch(it) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -98,7 +100,7 @@ fun FavouriteAnimeScreen(
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 ) },
             trailingIcon = {
-                if (searchQuery.isNotEmpty()) {
+                if (state.searchQuery.isNotEmpty()) {
                     IconButton(onClick = { viewModel.setSearch("") }) {
                         Icon(Icons.Default.Clear,
                             contentDescription = null)

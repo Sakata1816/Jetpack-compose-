@@ -8,14 +8,13 @@ import javax.inject.Inject
 class UserLocalDataSource  @Inject constructor(
     private val dao: FavoriteAnimeDao
 ) {
-    fun getAllAnime(query: String) = dao.searchAnime(query)
+    fun getAllAnime(query: String, userId: String) = dao.searchAnime(query,userId)
 
-    suspend fun syncAll(list: List<FavoriteAnimeEntity>) = dao.syncAll(list)
+    suspend fun syncAll(list: List<FavoriteAnimeEntity>,userId: String) = dao.syncAll(list,userId)
+
     suspend fun upsertAnime(anime: FavoriteAnimeEntity) = dao.upsertAnime(anime)
-    suspend fun upsertAll(list: List<FavoriteAnimeEntity>) = dao.upsertAll(list)
-    suspend fun deleteById(id: Int) = dao.deleteById(id)
-    suspend fun deleteAll() = dao.deleteAll()
 
-    suspend fun isFavorite  (id:Int) = dao.isFavorite(id)
-    fun getAnimeByStatus(status: AnimeStatus, query: String) = dao.getAnimeByStatus(status,query)
+    suspend fun deleteById(malId: Int, userId: String) = dao.deleteById(malId,userId)
+
+    fun getAnimeByStatus(status: AnimeStatus, query: String,userId: String) = dao.getAnimeByStatus(status,query,userId)
 }

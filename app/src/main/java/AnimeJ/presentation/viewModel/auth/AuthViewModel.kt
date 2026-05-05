@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.domain.repository.AnimeAuthRepository
-import AnimeJ.domain.repository.ProfileRepository
+import AnimeJ.domain.repository.auth.AnimeAuthRepository
+import AnimeJ.domain.repository.profile.ProfileRepository
 import AnimeJ.presentation.state.auth.AuthUiState
 import AnimeJ.presentation.navigation.authRoot.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,21 +33,20 @@ class AuthViewModel @Inject constructor(
     private val auth = FirebaseAuth.getInstance()
 
     init {
-        // Подписка на изменения состояния пользователя
-        auth.addAuthStateListener { firebaseAuth ->
-            _authState.value = if (firebaseAuth.currentUser != null) {
-                AuthState.Authorized
-            } else {
-                AuthState.Unauthorized
+       observeAuthState()
+    }
+
+    protected fun observeAuthState(){
+        viewModelScope.launch {
+            repository.observeAuthState().collect {state->
+                _authState.value=state
             }
         }
-
     }
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
             uiState = AuthUiState.Loading
-
             val result = repository.login(email, password)
 
             uiState = if (result.isSuccess) {
@@ -86,8 +85,10 @@ class AuthViewModel @Inject constructor(
 
 
     fun logout() {
-        repository.logout()
-        _authState.value = AuthState.Unauthorized
-        uiState = AuthUiState.Idle
+        viewModelScope.launch {
+            repository.logout()
+            _authState.value = AuthState.Unauthorized
+            uiState = AuthUiState.Idle
+        }
     }
 }

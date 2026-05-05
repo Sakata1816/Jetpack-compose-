@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import AnimeJ.presentation.screens.components.AnimeStatus
 
 @Database(entities = [FavoriteAnimeEntity::class],
-    version = 4,
+    version = 6,
     exportSchema = false)
     @TypeConverters(Converter::class)
     abstract class AppDatabase : RoomDatabase() {

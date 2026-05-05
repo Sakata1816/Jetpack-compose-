@@ -36,9 +36,9 @@ class FavoriteDataSource @Inject constructor(
             .set(anime)
     }
 
-    suspend fun deleteAnime(id: Int) {
+    suspend fun deleteAnime(malId: Int) {
         favoritesRef()
-            .document(id.toString())
+            .document(malId.toString())
             .delete()
     }
 }

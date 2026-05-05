@@ -40,124 +40,14 @@ import coil.compose.rememberAsyncImagePainter
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
 import AnimeJ.presentation.screens.components.ThemeSelector
 import AnimeJ.presentation.state.auth.ProfileUiState
-import AnimeJ.presentation.state.theme.ThemeMode
 import AnimeJ.presentation.viewModel.auth.AuthViewModel
 import AnimeJ.presentation.viewModel.profile.ProfileViewModel
 import AnimeJ.presentation.viewModel.theme.ThemeViewModel
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import java.time.temporal.TemporalAdjusters.next
-
-/*
-@Composable
-fun ProfileScreen(
-    navController: NavController,
-    viewModel: ProfileViewModel = hiltViewModel()
-) {
-    LaunchedEffect(Unit) {
-        viewModel.loadProfile()
-    }
-
-    val profile = viewModel.profile
-    val uiState = viewModel.uiState
 
 
 
-    when (uiState) {
-        ProfileUiState.Loading -> {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is ProfileUiState.Error -> {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(uiState.message, color = Color.Red)
-            }
-        }
-
-        else -> {
-            if (profile == null) return
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                // 🔹 Аватар
-                if (profile.avatarUrl.isNotEmpty()) {
-                    Image(
-                        painter = rememberAsyncImagePainter(profile.avatarUrl),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                            .background(Color.Gray),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            profile.username.firstOrNull()?.uppercase() ?: "U",
-                            color = Color.White,
-                            fontSize = 32.sp
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                // 🔹 Ник
-                Text(
-                    text = profile.username,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(Modifier.height(4.dp))
-
-                // 🔹 Email
-                Text(
-                    text = profile.email,
-                    color = Color.Gray
-                )
-
-                Spacer(Modifier.height(24.dp))
-
-                // 🔹 Изменить
-                Button(
-                    onClick = {navController.navigate(NavRoute.ChangeProfile.route)},
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Изменить профиль")
-                }
-
-                Spacer(Modifier.height(12.dp))
-
-                // 🔥 Logout
-                Button(
-                    onClick = {
-                        viewModel.logout()
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red
-                    )
-                ) {
-                    Text("Выйти", color = Color.White)
-                }
-            }
-        }
-    }
-}
-*/
 
 
 

@@ -4,10 +4,10 @@ import AnimeJ.data.repository.auth.AnimeAuthRepositoryImpl
 import AnimeJ.data.repository.profile.FavoriteRepositoryImpl
 import AnimeJ.data.repository.profile.ProfileRepositoryImpl
 import AnimeJ.data.repository.server.AnimeRepositoryImpl
-import AnimeJ.domain.repository.AnimeAuthRepository
-import AnimeJ.domain.repository.AnimeRepository
-import AnimeJ.domain.repository.FavoriteRepository
-import AnimeJ.domain.repository.ProfileRepository
+import AnimeJ.domain.repository.auth.AnimeAuthRepository
+import AnimeJ.domain.repository.server.AnimeRepository
+import AnimeJ.domain.repository.profile.FavoriteRepository
+import AnimeJ.domain.repository.profile.ProfileRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,11 +17,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
     @Binds
+    @Singleton
     abstract fun bindRepo(
         impl: AnimeRepositoryImpl
     ): AnimeRepository
 
+    //🧠 2. @Binds — “свяжи интерфейс с реализацией”
     @Binds
     @Singleton
     abstract fun bindAnimeAuthRepository(

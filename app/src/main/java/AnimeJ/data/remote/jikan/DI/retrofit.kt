@@ -13,6 +13,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    //🧠 1. @Provides — “я сам создаю объект”
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit =

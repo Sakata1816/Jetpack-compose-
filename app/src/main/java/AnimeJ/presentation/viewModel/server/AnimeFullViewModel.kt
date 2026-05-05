@@ -4,7 +4,7 @@ import AnimeJ.presentation.state.server.AnimeFullUiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import AnimeJ.domain.repository.AnimeRepository
+import AnimeJ.domain.repository.server.AnimeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

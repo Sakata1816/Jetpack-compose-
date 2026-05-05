@@ -1,16 +1,11 @@
-package AnimeJ.domain.repository
+package AnimeJ.domain.repository.server
 
-import AnimeJ.data.local.entity.FavoriteAnimeEntity
 import AnimeJ.domain.model.server.AnimeDetailResponseModel
 import AnimeJ.domain.model.server.AnimeEpisodesModel
 import AnimeJ.domain.model.server.AnimeFullModel
 import AnimeJ.domain.model.server.AnimeResponseModel
 import AnimeJ.domain.model.server.CharactersResponseModel
 import AnimeJ.domain.model.server.EpisodeDetailResponseModel
-import AnimeJ.domain.model.server.StreamingResponseModel
-import AnimeJ.presentation.screens.components.AnimeStatus
-import kotlinx.coroutines.flow.Flow
-
 
 interface AnimeRepository {
      suspend fun getAllAnimeList(page: Int,name: String): Result<AnimeResponseModel>
@@ -22,5 +17,3 @@ interface AnimeRepository {
 
 
 }
-
-

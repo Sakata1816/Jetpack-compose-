@@ -1,9 +1,10 @@
 package AnimeJ.data.repository.profile
 
+import AnimeJ.data.source.auth.AuthDataSource
 import AnimeJ.data.source.local.UserLocalDataSource
 import AnimeJ.data.source.profile.FavoriteDataSource
 import AnimeJ.domain.model.profile.FavoriteAnimeModel
-import AnimeJ.domain.repository.FavoriteRepository
+import AnimeJ.domain.repository.profile.FavoriteRepository
 import AnimeJ.mapper.animeLocalMapper.toDomain
 import AnimeJ.mapper.animeLocalMapper.toEntity
 import AnimeJ.mapper.animeProfileMapper.toDto
@@ -17,11 +18,15 @@ import kotlin.collections.map
 
 class FavoriteRepositoryImpl @Inject constructor(
    private val dataSource: FavoriteDataSource,
-    private val local: UserLocalDataSource
+    private val local: UserLocalDataSource,
+    private val auth: AuthDataSource
 ): FavoriteRepository{
 
+    private val currentUserId get() = auth.getCurrentUser()?.uid
+        ?: throw IllegalStateException("User not logged in")
+
     override fun getFavorites(query: String): Flow<List<FavoriteAnimeModel>> {
-        return local.getAllAnime(query).map { list ->
+        return local.getAllAnime(query,currentUserId).map { list ->
             list.map { it.toDomain() }
         }
     }
@@ -31,7 +36,12 @@ class FavoriteRepositoryImpl @Inject constructor(
     override suspend fun syncFromFirestore(): Result<Unit> {
         return try {
             val remoteList = dataSource.fetchAll()
-            local.syncAll(remoteList.map { it.toEntity() })
+
+            if (remoteList == null) {
+                return Result.failure(Exception("Remote data is null"))
+            }
+
+            local.syncAll(remoteList.map { it.toEntity (currentUserId) },currentUserId)
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(e)
@@ -41,17 +51,17 @@ class FavoriteRepositoryImpl @Inject constructor(
     override suspend fun addAnime(anime: FavoriteAnimeModel): Result<Unit> {
         return try {
            dataSource.addAnime(anime.toDto())
-            local.upsertAnime(anime.toEntity())
+            local.upsertAnime(anime.toEntity(currentUserId))
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(Exception("Failed to add anime", e))
         }
     }
 
-    override suspend fun deleteAnime(id: Int): Result<Unit> {
+    override suspend fun deleteAnime(malId: Int): Result<Unit> {
         return try {
-            dataSource.deleteAnime(id)
-            local.deleteById(id)
+            dataSource.deleteAnime(malId)
+            local.deleteById( malId, currentUserId)
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(Exception("Failed to delete anime", e))
@@ -64,13 +74,8 @@ class FavoriteRepositoryImpl @Inject constructor(
     // ---------------- LOCAL ----------------
 
 
-
-    override suspend fun isFavorite(id: Int): Boolean =
-        local.isFavorite(id)
-
-
     override fun getAnimeByStatus(status: AnimeStatus,query: String): Flow<List<FavoriteAnimeModel>> =
-        local.getAnimeByStatus(status,query).map { list ->
+        local.getAnimeByStatus(status,query,currentUserId).map { list ->
             list.map { it.toDomain() }
         }
 

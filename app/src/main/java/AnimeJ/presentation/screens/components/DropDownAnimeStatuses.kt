@@ -22,6 +22,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -148,13 +149,11 @@ fun StatusModal(
                             .padding(vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ){
-                            RoundCheckbox(
-                                checked = status == currentStatus,
-                                onCheckedChange = {
-                                    onStatusSelected(status)
-                                    onDismiss()
-                                }
-                            )
+
+                        RadioButton(
+                            selected = status == currentStatus,
+                            onClick = {  onStatusSelected(status) }
+                        )
 
                             Spacer(modifier = Modifier.width(8.dp))
 

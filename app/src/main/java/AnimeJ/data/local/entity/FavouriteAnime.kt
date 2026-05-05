@@ -5,9 +5,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import AnimeJ.presentation.screens.components.AnimeStatus
 
-@Entity(tableName = "favorite_anime")
+@Entity(tableName = "favorite_anime",
+    primaryKeys = ["mal_id"]
+)
 data class FavoriteAnimeEntity(
-    @PrimaryKey val mal_id: Int,
+    val mal_id: Int,
+    val userId: String,
     val title: String,
     val imageUrl: String?,
     val score: Double?,
@@ -19,3 +22,4 @@ data class FavoriteAnimeEntity(
     val genres: List<NameModel>?,
     val status: AnimeStatus = AnimeStatus.NONE
 )
+

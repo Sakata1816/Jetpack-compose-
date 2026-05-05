@@ -37,6 +37,7 @@ import AnimeJ.mapper.animeProfileMapper.toUi
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
 import AnimeJ.presentation.screens.components.AnimeCardWithMenu
 import AnimeJ.presentation.screens.components.AnimeStatus
+import AnimeJ.presentation.screens.components.ErrorBlock
 import AnimeJ.presentation.screens.components.StatusDropdown
 import AnimeJ.presentation.screens.components.toColor
 import AnimeJ.presentation.viewModel.profile.FavoriteAnimeViewModel
@@ -134,19 +135,27 @@ fun AnimeListScreen(navController: NavController,
                     )
                 }
 
-                item {
-                    if (state.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                        )
-                    }
                 }
             }
 
+        // Полноэкранный лоадер (только при первой загрузке — список пуст)
+        if (state.isLoading && state.anime.isEmpty()) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
+
+        // Блок ошибки
+        state.error?.let { error ->
+            ErrorBlock(
+                error = error,
+                onRetry = { viewModel.loadAnimeList() },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        }
+
         LaunchedEffect(listState) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .collect { index ->
@@ -158,18 +167,7 @@ fun AnimeListScreen(navController: NavController,
                     }
                 }
         }
-
-        state.error?.let { error ->
-            Text(
-                text = error,
-                color = Color.Red,
-                modifier = Modifier.align(Alignment.Center),
-            )
-        }
-
-
     }
-}
 
 
 @Composable

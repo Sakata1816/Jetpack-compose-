@@ -22,9 +22,10 @@ fun FavoriteAnimeEntity.toDomain(): FavoriteAnimeModel {
     )
 }
 
-fun FavoriteAnimeModel.toEntity(): FavoriteAnimeEntity {
+fun FavoriteAnimeModel.toEntity(userId: String): FavoriteAnimeEntity {
     return FavoriteAnimeEntity(
         mal_id = mal_id,
+        userId = userId,
         title = title,
         imageUrl = imageUrl ,
         score = score,
