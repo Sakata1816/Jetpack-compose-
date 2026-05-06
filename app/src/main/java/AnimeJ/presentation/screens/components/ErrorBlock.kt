@@ -31,7 +31,16 @@ import androidx.compose.ui.unit.dp
 fun ErrorBlock(
     error: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    icon: @Composable (() -> Unit)? = {
+        Icon(
+            imageVector = Icons.Default.Warning,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.error,
+            modifier = Modifier.size(40.dp)
+        )
+    },
+    content: @Composable (() -> Unit)? = null,
 ) {
     var showDetails by remember { mutableStateOf(false) }
 
@@ -40,18 +49,10 @@ fun ErrorBlock(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Warning,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.error,
-            modifier = Modifier.size(40.dp)
-        )
 
-        Text(
-            text = "Ой, что-то пошло не так...",
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center
-        )
+        icon?.invoke()
+
+        content?.invoke()
 
         // Кнопки инфо + повторить
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

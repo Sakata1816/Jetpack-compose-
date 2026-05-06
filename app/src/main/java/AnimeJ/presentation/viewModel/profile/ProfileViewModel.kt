@@ -15,7 +15,7 @@ import AnimeJ.domain.repository.profile.ProfileRepository
 import AnimeJ.mapper.animeProfileMapper.toDto
 import AnimeJ.mapper.animeProfileMapper.toModel
 import AnimeJ.presentation.navigation.authRoot.AuthState
-import AnimeJ.presentation.state.auth.ProfileUiState
+import AnimeJ.presentation.state.profile.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

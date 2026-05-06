@@ -6,6 +6,7 @@ import AnimeJ.mapper.animeProfileMapper.toDetail
 import AnimeJ.mapper.animeProfileMapper.toUi
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
 import AnimeJ.presentation.screens.components.AnimeStatus
+import AnimeJ.presentation.screens.components.ErrorBlock
 import AnimeJ.presentation.screens.components.StatusDropdown
 import AnimeJ.presentation.viewModel.profile.FavoriteAnimeViewModel
 import android.R.attr.alpha
@@ -159,17 +160,29 @@ fun FavouriteAnimeScreen(
                         modifier = Modifier.align(Alignment.Center),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.BookmarkBorder,
-                            contentDescription = null,
-                            modifier = Modifier.size(64.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+
                         Spacer(Modifier.height(12.dp))
-                        Text(
+                     /*   Text(
                             text = "Список пуст",
                             color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        )*/
+                        ErrorBlock(error = state.error?:"FireStore error",
+                            onRetry = {viewModel.syncFromFirestore()},
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.BookmarkBorder,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(64.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            content = {
+                                Text(
+                                    text = "Список пуст",
+                                    )
+                            }
+                            )
+
                     }
                 } else {
                     LazyColumn(

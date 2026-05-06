@@ -150,7 +150,13 @@ fun AnimeListScreen(navController: NavController,
             ErrorBlock(
                 error = error,
                 onRetry = { viewModel.loadAnimeList() },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
+                content = {
+                    Text(
+                        text = "Ой, что-то пошло не так...",
+                    )
+                }
+
             )
         }
 

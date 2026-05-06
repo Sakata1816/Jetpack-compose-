@@ -39,7 +39,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
 import AnimeJ.presentation.screens.components.ThemeSelector
-import AnimeJ.presentation.state.auth.ProfileUiState
+import AnimeJ.presentation.state.profile.ProfileUiState
 import AnimeJ.presentation.viewModel.auth.AuthViewModel
 import AnimeJ.presentation.viewModel.profile.ProfileViewModel
 import AnimeJ.presentation.viewModel.theme.ThemeViewModel
@@ -277,3 +277,4 @@ fun ProfileChangeScreen(
 
     }
 }
+

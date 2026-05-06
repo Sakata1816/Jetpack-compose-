@@ -34,6 +34,7 @@ import AnimeJ.domain.model.server.AnimeDetailModel
 import AnimeJ.domain.model.server.CharacterItemModel
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
 import AnimeJ.presentation.screens.components.BackButton
+import AnimeJ.presentation.screens.components.ErrorBlock
 import AnimeJ.presentation.viewModel.server.AnimeDetailViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -65,41 +66,52 @@ import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun AnimeDetailsScreen(
     animeId: Int?,
     navController: NavController,
     viewModel: AnimeDetailViewModel = hiltViewModel(),
 ) {
+    val id = animeId ?: 0
 
-    LaunchedEffect(animeId) {
-        viewModel.loadAnime(animeId?:0)
-        viewModel.loadCharacters(animeId?:0)
+    LaunchedEffect(id) {
+        viewModel.loadAnime(id)
+        viewModel.loadCharacters(id)
     }
 
     val state by viewModel.state.collectAsState()
 
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         when {
-            state.isLoading -> {
-                CircularProgressIndicator()
-            }
+            state.isLoading -> CircularProgressIndicator()
 
-            state.error != null -> {
-                Text("Error: ${state.error}")
-            }
-
-            state.anime != null -> {
-                state.anime?.let { anime ->
-                    AnimeDetailsContent(modifier = Modifier.fillMaxSize(), anime=anime, characters = state.characters, onClick = { id->
-                        navController.navigate(NavRoute.Episodes.createRoute(id))
-                    },
-                        onBack = {navController.popBackStack()})
+            state.error != null -> ErrorBlock(
+                error = state.error!!,
+                onRetry = {
+                    viewModel.loadAnime(id)
+                    viewModel.loadCharacters(id)
+                },
+                modifier = Modifier.align(Alignment.Center),
+                content = {
+                    Text(text = "Ой, что-то пошло не так...")
                 }
-            }
+            )
 
+            state.anime != null -> AnimeDetailsContent(
+                modifier = Modifier.fillMaxSize(),
+                anime = state.anime!!,
+                characters = state.characters,
+                onClick = { episodeId ->
+                    navController.navigate(NavRoute.Episodes.createRoute(episodeId))
+                },
+                onBack = { navController.popBackStack() }
+            )
         }
-        }
+    }
+}
 
 
 
