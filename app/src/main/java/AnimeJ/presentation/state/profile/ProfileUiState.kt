@@ -1,5 +1,6 @@
 package AnimeJ.presentation.state.profile
 
+import AnimeJ.domain.model.profile.UserProfileModel
 
 
 sealed class ProfileUiState {
@@ -10,3 +11,8 @@ sealed class ProfileUiState {
 
 }
 
+data class ProfileUiState1(
+    val loading: Boolean = false,
+    val error: String? = null,
+    val profile: UserProfileModel? = null
+)

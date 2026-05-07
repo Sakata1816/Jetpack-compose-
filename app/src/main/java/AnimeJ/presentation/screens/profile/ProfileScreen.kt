@@ -27,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -38,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import AnimeJ.presentation.navigation.mainRoot.NavRoute
+import AnimeJ.presentation.screens.components.ErrorBlock
 import AnimeJ.presentation.screens.components.ThemeSelector
 import AnimeJ.presentation.state.profile.ProfileUiState
 import AnimeJ.presentation.viewModel.auth.AuthViewModel
@@ -45,10 +45,7 @@ import AnimeJ.presentation.viewModel.profile.ProfileViewModel
 import AnimeJ.presentation.viewModel.theme.ThemeViewModel
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
-
-
-
-
+import androidx.compose.ui.Alignment
 
 
 @Composable
@@ -60,8 +57,8 @@ fun ProfileScreen(
 ) {
     val themeMode by themeViewModel.themeMode.collectAsState()
 
-    val profile = viewModel.profile
-    val uiState = viewModel.uiState
+    val state  by viewModel.state.collectAsState()
+
 
     // Загружаем профиль один раз при открытии
     LaunchedEffect(Unit) {
@@ -69,9 +66,9 @@ fun ProfileScreen(
     }
 
     // Локальные состояния полей
-    val nickname by remember(profile) { derivedStateOf { profile?.username ?: "" } }
-    val email by remember(profile) { derivedStateOf { profile?.email ?: "" } }
-    val avatarUrl by remember(profile) { derivedStateOf { profile?.avatarUrl ?: "" } }
+    val nickname by remember(state.profile) { derivedStateOf { state.profile?.username ?: "" } }
+    val email by remember(state.profile) { derivedStateOf { state.profile?.email ?: "" } }
+    val avatarUrl by remember(state.profile) { derivedStateOf { state.profile?.avatarUrl ?: "" } }
     // Каркас экрана — не зависит от загрузки
     Column(
         modifier = Modifier
@@ -79,8 +76,21 @@ fun ProfileScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        if(state.error!=null){
+            ErrorBlock(error = state.error?:"неизвестная ошибка :Profile screen(UI)",
+                onRetry = {viewModel.loadProfile()},
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                content = {
+                    Text(
+                        text = "Ой, что-то пошло не так...",
+                    )
+                }
+
+                )
+        }
         // Если профиль ещё не загрузился — показываем прогресс
-        if (uiState == ProfileUiState.Loading) {
+        if (state.loading) {
             CircularProgressIndicator()
         } else {
             // Аватар
@@ -107,6 +117,7 @@ fun ProfileScreen(
                     )
                 }
             }
+        }
 
             Spacer(Modifier.height(16.dp))
 
@@ -149,7 +160,6 @@ fun ProfileScreen(
             ) {
                 Text("Выйти", color = Color.White)
             }
-        }
 
         ThemeSelector(
             current = themeMode,
@@ -157,8 +167,9 @@ fun ProfileScreen(
         )
 
 
+        }
     }
-    }
+
 
 
 

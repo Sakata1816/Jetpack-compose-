@@ -23,10 +23,10 @@ class FavoriteRepositoryImpl @Inject constructor(
 ): FavoriteRepository{
 
     private val currentUserId get() = auth.getCurrentUser()?.uid
-        ?: throw IllegalStateException("User not logged in")
 
     override fun getFavorites(query: String): Flow<List<FavoriteAnimeModel>> {
-        return local.getAllAnime(query,currentUserId).map { list ->
+        val userId = currentUserId ?: return kotlinx.coroutines.flow.flowOf(emptyList())
+        return local.getAllAnime(query,userId).map { list ->
             list.map { it.toDomain() }
         }
     }
@@ -41,7 +41,7 @@ class FavoriteRepositoryImpl @Inject constructor(
                 return Result.failure(Exception("Remote data is null"))
             }
 
-            local.syncAll(remoteList.map { it.toEntity (currentUserId) },currentUserId)
+            local.syncAll(remoteList.map { it.toEntity (currentUserId?:"User not logged in" ) }, currentUserId?:"User not logged in" )
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(e)
@@ -51,7 +51,7 @@ class FavoriteRepositoryImpl @Inject constructor(
     override suspend fun addAnime(anime: FavoriteAnimeModel): Result<Unit> {
         return try {
            dataSource.addAnime(anime.toDto())
-            local.upsertAnime(anime.toEntity(currentUserId))
+            local.upsertAnime(anime.toEntity(currentUserId?:"User not logged in"))
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(Exception("Failed to add anime", e))
@@ -61,7 +61,7 @@ class FavoriteRepositoryImpl @Inject constructor(
     override suspend fun deleteAnime(malId: Int): Result<Unit> {
         return try {
             dataSource.deleteAnime(malId)
-            local.deleteById( malId, currentUserId)
+            local.deleteById( malId, currentUserId?:"User not logged in")
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(Exception("Failed to delete anime", e))
@@ -75,7 +75,7 @@ class FavoriteRepositoryImpl @Inject constructor(
 
 
     override fun getAnimeByStatus(status: AnimeStatus,query: String): Flow<List<FavoriteAnimeModel>> =
-        local.getAnimeByStatus(status,query,currentUserId).map { list ->
+        local.getAnimeByStatus(status,query,currentUserId?:"User not logged in").map { list ->
             list.map { it.toDomain() }
         }
 

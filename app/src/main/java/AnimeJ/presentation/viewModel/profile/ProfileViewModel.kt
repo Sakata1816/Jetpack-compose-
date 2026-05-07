@@ -16,8 +16,10 @@ import AnimeJ.mapper.animeProfileMapper.toDto
 import AnimeJ.mapper.animeProfileMapper.toModel
 import AnimeJ.presentation.navigation.authRoot.AuthState
 import AnimeJ.presentation.state.profile.ProfileUiState
+import AnimeJ.presentation.state.profile.ProfileUiState1
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,6 +39,9 @@ class ProfileViewModel @Inject constructor(
     var profile by mutableStateOf<UserProfileModel?>(null)
         private set
 
+    val _state = MutableStateFlow(ProfileUiState1())
+    val state = _state.asStateFlow()
+
 
 
 
@@ -44,25 +49,27 @@ class ProfileViewModel @Inject constructor(
         val uid = authRepository.getCurrentUser()?.uid
 
         if (uid == null) {
-            uiState = ProfileUiState.Error("Пользователь не авторизован")
+            _state.update {it.copy(error = "Пользователь не авторизован") }
             return
         }
 
         viewModelScope.launch {
-            uiState = ProfileUiState.Loading
+            _state.update { it.copy(loading = true) }
 
                 val result = repository.getUser(uid).fold(
                     onSuccess = {respose->
                         if (respose != null) {
-                            profile = respose.toModel()
-                            uiState = ProfileUiState.Success
+                            _state.update { it.copy(
+                                loading = false,
+                                error = null,
+                                profile = respose.toModel()
+                            ) }
                         } else {
-                            uiState = ProfileUiState.Error("Профиль не найден")
+                            _state.update { it.copy(error = "Профиль не найден") }
                         }
                     },
                     onFailure = {throwable ->
-                        uiState = ProfileUiState.Error("Ошибка загрузки профиля")
-
+                        _state.update { it.copy(error = "Ошибка загрузки профиля") }
                     }
                 )
             }
@@ -72,19 +79,19 @@ class ProfileViewModel @Inject constructor(
     fun createProfile(profile: UserProfileModel) {
         viewModelScope.launch {
             repository.createUser(profile.toDto())
-            this@ProfileViewModel.profile = profile
+            this@ProfileViewModel._state.update { it.copy(profile=profile) }
         }
     }
 
     fun updateProfile(username: String, uri: Uri?) {
         viewModelScope.launch {
             val uid = authRepository.getCurrentUser()?.uid ?: return@launch
-            uiState = ProfileUiState.Loading
+            _state.update { it.copy(loading = true) }
             try {
                 val avatarUrl = if (uri != null) {
                     repository.uploadAvatar(uid, uri).getOrThrow()
                 } else {
-                    profile?.avatarUrl
+                    state.value.profile?.avatarUrl
                 }
                 repository.updateProfile(uid, username, avatarUrl)
 
@@ -93,10 +100,15 @@ class ProfileViewModel @Inject constructor(
                     avatarUrl = avatarUrl
                 )
 
+                //change
+                _state.update { it.copy(
+                    profile= profile?.copy(username = username,
+                    avatarUrl = avatarUrl),
+                    loading = false)
+                }
                 isSaved = true   // 👈 ВАЖНО
-                uiState = ProfileUiState.Success
             } catch (e: Exception) {
-                uiState = ProfileUiState.Error(e.message ?: "Ошибка обновления профиля")
+                _state.update { it.copy(error = e.message?:"Ошибка обновления профиля") }
             }
         }
     }
